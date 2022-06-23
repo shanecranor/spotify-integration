@@ -42,12 +42,12 @@ function SpotifyComponent() {
   const percentDone = trackPosition/spotifyData.length
   const collapsedTag = collapsed ? ' collapsed' : '';
   return (<>
-    {/* <ScopedStylesheet url={new URL("styles/Slider.css", import.meta.url)}> */}
+    <ScopedStylesheet url={new URL("styles/Slider.css", import.meta.url)}>
       <label className='switch'>
         <input type='checkbox' onClick={() => setSlim(oldState => !oldState)}/>
         <span className='slider round'></span>
       </label>
-    {/* </ScopedStylesheet> */}
+    </ScopedStylesheet>
     <div className={'spotify-component' + collapsedTag + (slim ? ' slim' : '')}
           onClick={() => slim && setCollapsed(oldState => !oldState)}>
       <div className='spotify-container'>
