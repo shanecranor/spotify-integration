@@ -1,0 +1,128 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600&display=swap");
+.spotify-component {
+  margin: 40px;
+  --spotify-alpha: 0.95;
+  --background-tertiary: rgba(40,40,40, var(--spotify-alpha));
+  --background-primary: rgba(0,0,0, var(--spotify-alpha));
+  --primary: #71DBDB;
+  width: 400px;
+  height: 120px;
+  transition: height 0.5s, width 0.5s;
+  border-radius: 4px 4px 4px 4px;
+  overflow: hidden;
+  box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, calc(0.3 * var(--spotify-alpha)));
+}
+.spotify-component.collapsed {
+  height: 32px;
+  width: 215px;
+}
+.spotify-component > .spotify-container {
+  color: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.spotify-component > .spotify-container > .playing-header {
+  display: flex;
+  height: 32px;
+  flex-shrink: 0;
+  background: var(--background-primary);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, calc(0.25 * var(--spotify-alpha)));
+  z-index: 10;
+}
+.spotify-component > .spotify-container > .playing-header > .title-text {
+  padding-top: 4.5px;
+  transition: padding 0.5s;
+  padding-left: 10px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  width: 100%;
+}
+.spotify-component > .spotify-container > .playing-header > .title-text.collapsed {
+  padding-left: 10px;
+}
+.spotify-component > .spotify-container > .playing-header > .expand {
+  transition: filter 0.5s, transform 0.5s;
+  filter: invert(1) drop-shadow(0px 0px 5px rgba(255, 255, 255, 0));
+  height: 16px;
+  margin: 8px;
+}
+.spotify-component > .spotify-container > .playing-header > .expand:hover {
+  filter: invert(1) drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5));
+}
+.spotify-component > .spotify-container > .playing-header > .album-art {
+  transition: transform 0.5s, width 0.5s;
+  width: 0px;
+  transform: translateX(-100%);
+}
+.spotify-component > .spotify-container > .playing-header > .album-art.collapsed {
+  width: 32px;
+  transform: translateX(0%);
+}
+.spotify-component > .spotify-container > .playing-container {
+  background: var(--background-tertiary);
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.spotify-component > .spotify-container > .playing-container > .album-art {
+  height: 88px;
+}
+.spotify-component > .spotify-container > .playing-container > .right-info-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-left: 16px;
+}
+.spotify-component > .spotify-container > .playing-container > .right-info-container > .artist-title-container {
+  font-family: "Poppins", sans-serif;
+  padding-top: 6px;
+  height: 100%;
+  width: 282px;
+}
+.spotify-component > .spotify-container > .playing-container > .right-info-container > .artist-title-container > .song-title {
+  font-size: 16px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.spotify-component > .spotify-container > .playing-container > .right-info-container > .artist-title-container > .artist-name {
+  font-size: 14px;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.spotify-component > .spotify-container > .playing-container > .right-info-container > .progress-text-container {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  display: flex;
+  padding-bottom: 5px;
+  margin-right: 16px;
+}
+.spotify-component > .spotify-container > .playing-container > .right-info-container > .progress-text-container > .progress {
+  text-align: left;
+  width: 100%;
+}
+.spotify-component > .spotify-container > .playing-container > .right-info-container > .progress-text-container > .length {
+  text-align: right;
+  width: 100%;
+}
+.spotify-component > .spotify-container > .playing-container > .right-info-container > .progress-bar-outer {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.2);
+  height: 4px;
+  border-radius: 10px;
+  margin-right: 16px;
+  margin-bottom: 9px;
+}
+.spotify-component > .spotify-container > .playing-container > .right-info-container > .progress-bar-outer > .progress-bar-inner {
+  border-radius: inherit;
+  height: 100%;
+  background: var(--primary);
+  width: min(var(--song-position), 100%);
+}/*# sourceMappingURL=App.css.map */
