@@ -1,8 +1,8 @@
-import React from "react";
+import React from "https://npm.tfl.dev/react";
 import PropTypes from "prop-types";
 
 import AnotherComponent from "../another-component/another-component.tsx";
-import SpotifyComponent from "../spotify-component/SpotifyComponent";
+import SpotifyComponent from "../spotify-component/SpotifyComponent.js";
 export default function DefaultSite({ exampleProp }) {
   return (
     <div>

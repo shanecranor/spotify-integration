@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from "https://npm.tfl.dev/react";
 import jumper from "https://tfl.dev/@truffle/utils@0.0.1/jumper/jumper.js";
+import SpotifyComponent from "../../components/spotify-component/SpotifyComponent.js";
 
 export default function Home() {
   useEffect(() => {
@@ -18,5 +19,5 @@ export default function Home() {
       ],
     });
   }, []);
-  return <div>Extension Mapping</div>;
+  return <div><p>testing</p><SpotifyComponent/></div>; 
 }
