@@ -1,6 +1,6 @@
 import React from "react";
 import Home from "../../components/home/home.tsx";
-import SpotifyComponent from "../components/spotify-component/SpotifyComponent.ts";
+import SpotifyComponent from "../../components/spotify-component/SpotifyComponent.js";
 import { gql, useQuery } from "https://tfl.dev/@truffle/api@0.0.1/client.js";
 
 const query = gql`{ time }`;
