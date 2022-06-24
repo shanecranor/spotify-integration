@@ -4,99 +4,75 @@
   --spotify-alpha: 0.95;
   --background-tertiary: rgba(40,40,40, var(--spotify-alpha));
   --background-primary: rgba(0,0,0, var(--spotify-alpha));
+  --background-tooltip: #71DBDB;
   --primary: #71DBDB;
-  width: 400px;
-  height: 120px;
+  --spotify-width: 400px;
+  --spotify-height: 88px;
+  --spotify-min-width: 200px;
+  --spotify-min-height: 32px;
+  width: var(--spotify-width);
+  height: var(--spotify-height);
+  display: flex;
+  align-items: center;
   transition: height 0.5s, width 0.5s;
+  background: var(--background-tertiary);
+  color: white;
   border-radius: 4px 4px 4px 4px;
   overflow: hidden;
   box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, calc(0.3 * var(--spotify-alpha)));
 }
-.spotify-component.collapsed {
-  height: 32px;
-  width: 215px;
+.spotify-component > .controls {
+  cursor: pointer;
+  transition: filter 0.5s;
+  filter: opacity(1);
+  align-self: flex-start;
+  width: inherit;
+  text-align: right;
+  position: absolute;
+  font-weight: 400;
+  font-family: "Inter", sans-serif;
+  white-space: nowrap;
 }
-.spotify-component > .spotify-container {
-  color: white;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+.spotify-component > .controls > div {
+  padding: 5px 10px 0px 5px;
+  display: inline-block;
 }
-.spotify-component > .spotify-container > .playing-header {
-  display: flex;
-  height: 32px;
-  flex-shrink: 0;
-  background: var(--background-primary);
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, calc(0.25 * var(--spotify-alpha)));
-  z-index: 10;
+.spotify-component > .album-art {
+  height: inherit;
 }
-.spotify-component > .spotify-container > .playing-header > .title-text {
-  padding-top: 4.5px;
-  transition: padding 0.5s;
-  padding-left: 10px;
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  width: 100%;
-}
-.spotify-component > .spotify-container > .playing-header > .title-text.collapsed {
-  padding-left: 10px;
-}
-.spotify-component > .spotify-container > .playing-header > .expand {
-  transition: filter 0.5s, transform 0.5s;
-  filter: invert(1) drop-shadow(0px 0px 5px rgba(255, 255, 255, 0));
-  height: 16px;
-  margin: 8px;
-}
-.spotify-component > .spotify-container > .playing-header > .expand:hover {
-  filter: invert(1) drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5));
-}
-.spotify-component > .spotify-container > .playing-header > .album-art {
-  transition: transform 0.5s, width 0.5s;
-  width: 0px;
-  transform: translateX(-100%);
-}
-.spotify-component > .spotify-container > .playing-header > .album-art.collapsed {
-  width: 32px;
-  transform: translateX(0%);
-}
-.spotify-component > .spotify-container > .playing-container {
-  background: var(--background-tertiary);
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-.spotify-component > .spotify-container > .playing-container > .album-art {
-  height: 88px;
-}
-.spotify-component > .spotify-container > .playing-container > .right-info-container {
+.spotify-component > .song-info {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   padding-left: 16px;
 }
-.spotify-component > .spotify-container > .playing-container > .right-info-container > .artist-title-container {
+.spotify-component > .song-info > .artist-title-container {
   font-family: "Poppins", sans-serif;
   padding-top: 6px;
   height: 100%;
-  width: 282px;
+  width: calc(var(--spotify-width) - var(--spotify-height) - 75px);
+  transition: width 0.5s;
 }
-.spotify-component > .spotify-container > .playing-container > .right-info-container > .artist-title-container > .song-title {
+.spotify-component > .song-info > .artist-title-container > .song-title {
+  transition: line-height 0.5s, margin 0.5s;
+  line-height: 24px;
   font-size: 16px;
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.spotify-component > .spotify-container > .playing-container > .right-info-container > .artist-title-container > .artist-name {
+.spotify-component > .song-info > .artist-title-container > .artist-name {
+  transition: padding 0.5s;
+  padding-top: 1px;
   font-size: 14px;
   font-weight: 400;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.spotify-component > .spotify-container > .playing-container > .right-info-container > .progress-text-container {
+.spotify-component > .song-info > .progress-text-container {
   font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 10px;
@@ -104,15 +80,15 @@
   padding-bottom: 5px;
   margin-right: 16px;
 }
-.spotify-component > .spotify-container > .playing-container > .right-info-container > .progress-text-container > .progress {
+.spotify-component > .song-info > .progress-text-container > .progress {
   text-align: left;
   width: 100%;
 }
-.spotify-component > .spotify-container > .playing-container > .right-info-container > .progress-text-container > .length {
+.spotify-component > .song-info > .progress-text-container > .length {
   text-align: right;
   width: 100%;
 }
-.spotify-component > .spotify-container > .playing-container > .right-info-container > .progress-bar-outer {
+.spotify-component > .song-info > .progress-bar-outer {
   flex-shrink: 0;
   background: rgba(255, 255, 255, 0.2);
   height: 4px;
@@ -120,9 +96,74 @@
   margin-right: 16px;
   margin-bottom: 9px;
 }
-.spotify-component > .spotify-container > .playing-container > .right-info-container > .progress-bar-outer > .progress-bar-inner {
+.spotify-component > .song-info > .progress-bar-outer > .progress-bar-inner {
   border-radius: inherit;
   height: 100%;
   background: var(--primary);
   width: min(var(--song-position), 100%);
+}
+
+.spotify-component.collapsed {
+  width: var(--spotify-min-width);
+  height: var(--spotify-min-height);
+}
+.spotify-component.collapsed > .controls {
+  filter: opacity(0);
+  pointer-events: none;
+}
+.spotify-component.collapsed > .album-art {
+  height: inherit;
+}
+.spotify-component.collapsed > .song-info > .artist-title-container {
+  width: calc(var(--spotify-min-width) - var(--spotify-min-height) - 30px);
+}
+.spotify-component.collapsed > .song-info > .artist-title-container > .song-title {
+  line-height: 20px;
+  margin-left: -7px;
+}
+.spotify-component.collapsed > .song-info > .artist-title-container > .artist-name {
+  padding-left: 250px;
+}
+
+.tooltip:before {
+  content: "";
+  transition: transform 0.25s, filter 0.25s;
+  transform: translateY(-14.1px) translateX(-5px);
+  filter: opacity(0);
+}
+.tooltip:after {
+  content: "";
+  transition: transform 0.25s, filter 0.25s;
+  transform: translateY(-67px) translateX(-86.6%);
+  filter: opacity(0);
+}
+.tooltip:hover:before {
+  content: "";
+  display: block;
+  position: absolute;
+  transform: translateY(-9.1px) translateX(-6px);
+  z-index: 99;
+  filter: opacity(1);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid black;
+}
+.tooltip:hover:after {
+  font-size: 14px;
+  display: block;
+  content: attr(data-hover-text);
+  filter: opacity(1);
+  background: black;
+  position: absolute;
+  padding: 4px;
+  border-radius: 4px;
+  padding: 9.5px 10px 9.5px 10px;
+}
+.tooltip.help:hover:after {
+  transform: translateY(-63px) translateX(-86.6%);
+}
+.tooltip.minimize:hover:after {
+  transform: translateY(-63px) translateX(-90%);
 }/*# sourceMappingURL=App.css.map */
