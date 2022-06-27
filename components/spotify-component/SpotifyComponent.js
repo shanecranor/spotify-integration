@@ -3,6 +3,7 @@
 // import './styles/Slider.scss'
 // import ExpandAlt from './images/expand-alt.svg'
 // import Shrink from './images/down-left-and-up-right-to-center-solid.svg'
+import React from 'https://npm.tfl.dev/react'
 import ScopedStylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/scoped-stylesheet/scoped-stylesheet.jsx";
 import Stylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/stylesheet/stylesheet.jsx";
 import { useEffect, useState } from 'https://npm.tfl.dev/react'
@@ -40,30 +41,33 @@ function SpotifyComponent() {
   const percentDone = trackPosition/spotifyData.length
   const collapsedTag = collapsed ? ' collapsed' : ''
   return (
-    <ScopedStylesheet url={new URL("styles/App.css", import.meta.url)}>
-    <div className={'spotify-component' + collapsedTag}
+    <>
+      <style>{`html { overflow: hidden }`}</style>
+      <ScopedStylesheet url={new URL("styles/App.css", import.meta.url)}>
+        <div className={'spotify-component' + collapsedTag}
           onClick={() => collapsed && setCollapsed(oldState => !oldState)}>
-        <img 
-          className={'album-art ' + collapsedTag}
-          src={spotifyData.images[0].url} alt='album cover'
-        />
-        <SongInfo 
-        title={spotifyData.title}
-        artists={spotifyData.artists}
-        length={spotifyData.length}
-        percentDone={percentDone}
-        progressDate={progressDate}
-        />
-        <div className='controls'>
-        <div  className='help tooltip' 
-          data-hover-text='What the streamer is currently listening to'>?</div>
-        <div  className='minimize tooltip' 
-          data-hover-text='shrink the spotify overlay'
-          onClick={() => setCollapsed(oldState => !oldState)}>‒</div>
+          <img 
+            className={'album-art ' + collapsedTag}
+            src={spotifyData.images[0].url} alt='album cover'
+          />
+          <SongInfo 
+          title={spotifyData.title}
+          artists={spotifyData.artists}
+          length={spotifyData.length}
+          percentDone={percentDone}
+          progressDate={progressDate}
+          />
+          <div className='controls'>
+          <div  className='help tooltip' 
+            data-hover-text='What the streamer is currently listening to'>?</div>
+          <div  className='minimize tooltip' 
+            data-hover-text='shrink the spotify overlay'
+            onClick={() => setCollapsed(oldState => !oldState)}>‒</div>
 
+          </div>
         </div>
-    </div>
-  </ScopedStylesheet>
+    </ScopedStylesheet>
+    </>
   )
 }
 
