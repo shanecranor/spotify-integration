@@ -41,8 +41,8 @@ function SpotifyComponent() {
   const percentDone = trackPosition/spotifyData.length
   const collapsedTag = collapsed ? ' collapsed' : ''
   return (
-    <>
-      <style>{`html { overflow: hidden }`}</style>
+    <aside>
+      {/* <style>{`html { overflow: hidden }`}</style> */}
       <ScopedStylesheet url={new URL("styles/App.css", import.meta.url)}>
         <div className={'spotify-component' + collapsedTag}
           onClick={() => collapsed && setCollapsed(oldState => !oldState)}>
@@ -67,7 +67,7 @@ function SpotifyComponent() {
           </div>
         </div>
     </ScopedStylesheet>
-    </>
+    </aside>
   )
 }
 

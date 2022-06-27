@@ -1,7 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600&display=swap");
+aside {
+  width: 500px;
+  height: 150px;
+}
+
 .spotify-component {
   --spotify-alpha: 0.95;
-  --background-tertiary: rgba(40,40,40, var(--spotify-alpha));
+  --background-tertiary: rgba(40,140,40, var(--spotify-alpha));
   --background-primary: rgba(0,0,0, var(--spotify-alpha));
   --background-tooltip: #71DBDB;
   --primary: #71DBDB;
@@ -11,6 +16,7 @@
   --spotify-min-height: 32px;
   width: var(--spotify-width);
   height: var(--spotify-height);
+  margin-top: 45px;
   display: flex;
   align-items: center;
   transition: height 0.5s, width 0.5s;
@@ -140,7 +146,7 @@
   content: "";
   display: block;
   position: absolute;
-  transform: translateY(-9.1px) translateX(-6px);
+  transform: translateY(-10px) translateX(-6px);
   z-index: 99;
   filter: opacity(1);
   width: 0;
