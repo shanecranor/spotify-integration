@@ -5,12 +5,13 @@ import SpotifyComponent from "../../components/spotify-component/SpotifyComponen
 export default function Home() {
   useEffect(() => {
     const style = {
-      width: "400px",
-      height: "400px",
-      background: "#fff",
+      width: "500px",
+      height: "150px",
+      background: "none",
       position: "fixed",
       bottom: 0,
       "z-index": "999",
+      overflow: "hidden"
     };
     jumper.call("layout.applyLayoutConfigSteps", {
       layoutConfigSteps: [
@@ -19,5 +20,5 @@ export default function Home() {
       ],
     });
   }, []);
-  return <div><p>testing</p><SpotifyComponent/></div>; 
+  return <SpotifyComponent/>; 
 }
