@@ -6,25 +6,76 @@
 import React from 'https://npm.tfl.dev/react'
 import ScopedStylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/scoped-stylesheet/scoped-stylesheet.jsx";
 import Stylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/stylesheet/stylesheet.jsx";
+import jumper from "https://tfl.dev/@truffle/utils@0.0.1/jumper/jumper.js";
 import { useEffect, useState } from 'https://npm.tfl.dev/react'
 function SpotifyComponent() {
   const [spotifyData, setSpotifyData] = useState()
+  const [toolTip, setToolTip] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
   const [trackPosition, setTrackPosition] = useState(0)
-  //fetch data 
+  //pull data from cloudflare worker
+  const refreshRate = 10000
+  const workerUrl = 'https://spotify-status-updater.shanecranor.workers.dev/'
+  const orgID = 'shane'
+  //
+  useEffect(() => {
+    const overlayStates = {
+      fullSize: { top: "80%", right: "100%", bottom: "100%", left: "100%", transition : "0s"},
+      fullSizeToolTip: { top: "100%", right: "100%", bottom: "100%", left: "100%", transition : "0s"},
+      collapsed: { top: "60px", right: "100%", bottom: "100%", left: "100%", transition : "0.5s"}
+    }
+    
+    function createClipPath({top, right, bottom, left}){
+      return `inset(calc(100% - ${top}) calc(100% - ${right}) calc(100% - ${bottom}) calc(100% - ${left}))`
+    }
+    
+    let currentState = overlayStates.fullSize
+    if(toolTip){
+      currentState = overlayStates.fullSizeToolTip
+    }
+    if(collapsed){
+      currentState = overlayStates.collapsed
+    }
+
+    const style = {
+      width: "430px",
+      height: "150px",
+      'clip-path': createClipPath(currentState),
+      transition: `clip-path ${currentState.transition}`,
+      background: "none",
+      position: "fixed",
+      bottom: 0,
+      "z-index": "999",
+      overflow: "hidden"
+    };
+    jumper.call("layout.applyLayoutConfigSteps", {
+      layoutConfigSteps: [
+        { action: "useSubject" }, // start with our iframe
+        { action: "setStyle", value: style },
+      ],
+    });
+  }, [collapsed, toolTip]);
+
   useEffect(() => {
     async function fetchData(){
-      const jsonResponse = await (await fetch('https://spotify-status-updater.shanecranor.workers.dev/?orgID=shane')).json()
+      const jsonResponse = await (await fetch(`${workerUrl}?orgID=${orgID}`)).json()
+      //store fetch time to calculate song position
       jsonResponse.fetchTime = Date.now()
       setSpotifyData(jsonResponse)
     }
-    fetchData()
-    const fetchInterval = setInterval(() => {
-      fetchData().catch(console.error)
-    }, 5000)
+    fetchData() //fetch on page load
+    //TODO: queue a fetch to go off at the end of every song
+    //fetch at the specified refresh rate
+    const fetchInterval = setInterval(
+      () => {
+        fetchData().catch(console.error)
+      }, 
+      refreshRate
+    )
     return () => (clearInterval(fetchInterval))
   }, [])
   //update time
+  const timeResolution = 200;
   useEffect(() => {
     const timeUpdateInterval = setInterval(() => {
       if(!spotifyData) return
@@ -33,7 +84,7 @@ function SpotifyComponent() {
       } else {
         setTrackPosition(spotifyData.position)
       }
-    }, 200)
+    }, timeResolution)
     return () => (clearInterval(timeUpdateInterval))
   }, [spotifyData])
   if(!spotifyData) return "loading"
@@ -42,7 +93,7 @@ function SpotifyComponent() {
   const collapsedTag = collapsed ? ' collapsed' : ''
   return (
     <aside>
-      {/* <style>{`html { overflow: hidden }`}</style> */}
+      <style>{`html { overflow: hidden }`}</style>
       <ScopedStylesheet url={new URL("styles/App.css", import.meta.url)}>
         <div className={'spotify-component' + collapsedTag}
           onClick={() => collapsed && setCollapsed(oldState => !oldState)}>
@@ -52,18 +103,18 @@ function SpotifyComponent() {
           />
           <SongInfo 
           title={spotifyData.title}
+          link={spotifyData.link}
           artists={spotifyData.artists}
           length={spotifyData.length}
           percentDone={percentDone}
           progressDate={progressDate}
           />
-          <div className='controls'>
-          <div  className='help tooltip' 
-            data-hover-text='What the streamer is currently listening to'>?</div>
-          <div  className='minimize tooltip' 
+          <div className='controls' >
+          <div  className='help tooltip'  onMouseOver={() => setToolTip(true)} onMouseOut={() => setToolTip(false)}
+            data-hover-text='what the streamer is currently listening to'>?</div>
+          <div  className='minimize tooltip' onMouseOver={() => setToolTip(true)} onMouseOut={() => setToolTip(false)}
             data-hover-text='shrink the spotify overlay'
             onClick={() => setCollapsed(oldState => !oldState)}>‒</div>
-
           </div>
         </div>
     </ScopedStylesheet>
@@ -71,21 +122,28 @@ function SpotifyComponent() {
   )
 }
 
-function SongInfo({title, artists, length, percentDone, progressDate}){
+function SongInfo({title, link, artists, length, percentDone, progressDate}){
   function pad(n){
     return n < 10 ? `0${n}` : n
   } 
   function formatDate(d){
+    if(d.getUTCHours())
+      return `${d.getUTCHours()}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
     return `${d.getMinutes()}:${pad(d.getSeconds())}`
   }
   return (
     <div className={'song-info '}>
       <div className={'artist-title-container '}>
         <div className='song-title'>
-          {title}
+          <a href={link} target="_blank" rel="noopener noreferrer">{title}</a>
         </div>
         <div className='artist-name'> 
-          {artists.map(artist => (artist.name)).join(", ")}
+          {artists.map(artist => (
+          <p key={artist}>
+            <a href={artist.external_urls.spotify} target="_blank" rel="noopener noreferrer">
+              {artist.name}
+              </a>
+            </p>))}
         </div>
       </div>
       <div className='progress-text-container'>

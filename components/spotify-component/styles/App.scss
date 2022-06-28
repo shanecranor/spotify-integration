@@ -1,11 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600&display=swap');
-aside{
-  width: 500px;
-  height: 150px;
-}
 .spotify-component{
   --spotify-alpha: 0.95;
-  --background-tertiary: rgba(40,140,40, var(--spotify-alpha));
+  --background-tertiary: rgba(40,40,40, var(--spotify-alpha));
   --background-primary: rgba(0,0,0, var(--spotify-alpha));
   --background-tooltip: #71DBDB;
   --primary: #71DBDB;
@@ -13,21 +9,21 @@ aside{
   --spotify-height: 88px;
   --spotify-min-width: 200px;
   --spotify-min-height: 32px;
-  
+  --top-margin: 45px;
   width: var(--spotify-width);
   height: var(--spotify-height);
-  margin-top: 45px; 
+  margin-top: var(--top-margin);
   display: flex;
   align-items: center;
   //pretty styles
-  transition: height 0.5s, width 0.5s;  
+  transition: height 0.5s, margin 0.5s, width 0.5s;  
   background: var(--background-tertiary);
   color: white;
-  border-radius: 4px 4px 4px 4px;
+  border-radius: 4px;
   overflow: hidden; //prevents square image from overflowing
   box-shadow: 0px 10px 10px 0px rgba(black, calc(0.3 * var(--spotify-alpha)));
   >.controls{
-    cursor: pointer;
+    pointer-events: none;
     transition: filter 0.5s;
     filter: opacity(1);
     align-self: flex-start;
@@ -37,6 +33,8 @@ aside{
     font-weight: 400;
     font-family: 'Inter', sans-serif;
     >div{
+      pointer-events: all;
+      cursor: pointer;
       padding: 5px 10px 0px 5px;
       display: inline-block;
     }
@@ -66,8 +64,16 @@ aside{
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        >a{
+          color: white;
+          text-decoration: none;
+          &:hover{
+            text-decoration: underline;
+          }
+        }
       }
       >.artist-name{
+        
         transition: padding 0.5s;
         padding-top: 1px;
         font-size: 14px;
@@ -75,6 +81,23 @@ aside{
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        
+        >p{
+          display: inline;
+          &:after {
+            content: ", ";
+          }
+          &:last-child:after {
+            content: "";
+          }
+          >a{
+            color: white;
+            text-decoration: none;
+            &:hover{
+              text-decoration: underline;
+            }
+          }
+        }
       }
     }
     >.progress-text-container{
@@ -111,23 +134,29 @@ aside{
   }
 }
 .spotify-component.collapsed{
+  margin-top: calc(var(--top-margin) + var(--spotify-height) - var(--spotify-min-height));
   width: var(--spotify-min-width);
   height: var(--spotify-min-height);
   >.controls{
     filter: opacity(0);
     pointer-events: none;
+    >div{
+      pointer-events: none;
+    }
   }
   >.album-art{
     height: inherit;
   }
   >.song-info{
     >.artist-title-container{
-      width: calc(var(--spotify-min-width) - var(--spotify-min-height) - 30px);
+      width: calc(var(--spotify-min-width) - var(--spotify-min-height) - 20px);
       >.song-title{
+        pointer-events: none;
         line-height: 20px;
         margin-left: -7px;
       }
       >.artist-name{
+        pointer-events: none;
         padding-left: 250px;
       }
     }
