@@ -8,7 +8,9 @@ import ScopedStylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/scope
 import Stylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/stylesheet/stylesheet.jsx";
 import jumper from "https://tfl.dev/@truffle/utils@0.0.1/jumper/jumper.js";
 import { useEffect, useState } from 'https://npm.tfl.dev/react'
+
 function SpotifyComponent() {
+  // const [mousePos, setMousePos] = useState({x: 0, y: 0});
   const [spotifyData, setSpotifyData] = useState()
   const [toolTip, setToolTip] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
@@ -17,12 +19,11 @@ function SpotifyComponent() {
   const refreshRate = 10000
   const workerUrl = 'https://spotify-status-updater.shanecranor.workers.dev/'
   const orgID = 'shane'
-  //
   useEffect(() => {
     const overlayStates = {
-      fullSize: { top: "80%", right: "100%", bottom: "100%", left: "100%", transition : "0s"},
-      fullSizeToolTip: { top: "100%", right: "100%", bottom: "100%", left: "100%", transition : "0s"},
-      collapsed: { top: "60px", right: "100%", bottom: "100%", left: "100%", transition : "0.5s"}
+      fullSize:        { top: "71%", right: "415px", bottom: "100%", left: "100%", transition : "0s"},
+      fullSizeToolTip: { top: "96%", right: "415px", bottom: "100%", left: "100%", transition : "0s"},
+      collapsed:       { top: "50px", right: "215px", bottom: "100%", left: "100%", transition : "0.5s"}
     }
     
     function createClipPath({top, right, bottom, left}){
