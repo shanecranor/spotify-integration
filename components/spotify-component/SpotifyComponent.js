@@ -10,7 +10,35 @@ import jumper from "https://tfl.dev/@truffle/utils@0.0.1/jumper/jumper.js";
 import { useEffect, useState } from 'https://npm.tfl.dev/react'
 
 function SpotifyComponent() {
-  // const [mousePos, setMousePos] = useState({x: 0, y: 0});
+  /* start of draggable code */
+  //thanks bobby https://bobbyhadz.com/blog/react-get-mouse-position
+  const [coords, setCoords] = useState({x: 500, y: 0});
+  const handleMouseMove = event => {
+    setCoords({
+      x: event.clientX - event.target.offsetLeft,
+      y: event.clientY - event.target.offsetTop,
+    });
+  };
+  const [globalMouse, setGlobalMouse] = useState({x: 0, y: 200, pressed: false});
+  useEffect(() => {
+    //get global mouse coordinates
+    const handleWindowMouseMove = event => {
+      setGlobalMouse((old) => ({...old,
+        x: event.screenX, y: event.screenY,
+      }));
+    };
+    console.log(globalMouse.pressed +"USEEFECTMOUSE")
+    if(globalMouse.pressed){
+      window.addEventListener('mousemove', handleWindowMouseMove);
+    }else{
+      window.removeEventListener('mousemove', handleWindowMouseMove)
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleWindowMouseMove);
+    };
+  }, [globalMouse.pressed]);
+  /* end of draggable code */
+  // console.log(globalMousePos)
   const [spotifyData, setSpotifyData] = useState()
   const [toolTip, setToolTip] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
@@ -37,15 +65,15 @@ function SpotifyComponent() {
     if(collapsed){
       currentState = overlayStates.collapsed
     }
-
     const style = {
       width: "430px",
       height: "150px",
       'clip-path': createClipPath(currentState),
       transition: `clip-path ${currentState.transition}`,
-      background: "none",
+      //background: "red",
       position: "fixed",
-      bottom: 0,
+      top:  globalMouse.y - 200 + "px",
+      left: globalMouse.x - 200 + "px",
       "z-index": "999",
       overflow: "hidden"
     };
@@ -55,7 +83,7 @@ function SpotifyComponent() {
         { action: "setStyle", value: style },
       ],
     });
-  }, [collapsed, toolTip]);
+  }, [collapsed, toolTip, globalMouse]);
 
   useEffect(() => {
     async function fetchData(){
@@ -92,12 +120,17 @@ function SpotifyComponent() {
   const progressDate = new Date(Math.min(trackPosition, spotifyData.length))
   const percentDone = trackPosition/spotifyData.length
   const collapsedTag = collapsed ? ' collapsed' : ''
+  const dragTag = globalMouse.pressed ? ' dragging' : ''
   return (
     <aside>
       <style>{`html { overflow: hidden }`}</style>
       <ScopedStylesheet url={new URL("styles/App.css", import.meta.url)}>
-        <div className={'spotify-component' + collapsedTag}
-          onClick={() => collapsed && setCollapsed(oldState => !oldState)}>
+        <div className={'spotify-component' + collapsedTag + dragTag}
+          onClick={() => collapsed && setCollapsed(oldState => !oldState)}
+          onMouseDown={ () => setGlobalMouse((old) => ({...old, pressed: true}))}
+          onMouseUp= {  () => setGlobalMouse((old) => ({...old, pressed: false}))}
+          onMouseMove={handleMouseMove}
+          >
           <img 
             className={'album-art ' + collapsedTag}
             src={spotifyData.images[0].url} alt='album cover'

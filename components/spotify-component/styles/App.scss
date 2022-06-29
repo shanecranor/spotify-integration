@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600&display=swap');
+.dragging{
+  user-select: none;
+}
 .spotify-component{
   --spotify-alpha: 0.95;
   --background-tertiary: rgba(40,40,40, var(--spotify-alpha));
@@ -42,6 +45,7 @@
     // background: blue;
   }
   >.album-art{
+    pointer-events: none;
     height: inherit;
   }
   >.song-info{
