@@ -12,14 +12,14 @@ import { useEffect, useState } from 'https://npm.tfl.dev/react'
 function SpotifyComponent() {
   /* start of draggable code */
   //thanks bobby https://bobbyhadz.com/blog/react-get-mouse-position
-  const [coords, setCoords] = useState({x: 500, y: 0});
-  const handleMouseMove = event => {
-    setCoords({
-      x: event.clientX - event.target.offsetLeft,
-      y: event.clientY - event.target.offsetTop,
-    });
-  };
-  const [globalMouse, setGlobalMouse] = useState({x: 0, y: 200, pressed: false});
+  const [coords, setCoords] = useState({x: 0, y: 0});
+  // const handleMouseMove = event => {
+  //   setCoords((old) => ({ test: console.log(old),
+  //     x: event.clientX - event.target.offsetLeft,
+  //     y: event.clientY - event.target.offsetTop,
+  //   }));
+  // };
+  const [globalMouse, setGlobalMouse] = useState({x: 200, y: 200, pressed: false});
   useEffect(() => {
     //get global mouse coordinates
     const handleWindowMouseMove = event => {
