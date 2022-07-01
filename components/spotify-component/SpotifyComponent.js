@@ -15,24 +15,47 @@ function SpotifyComponent() {
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const handleMouseMove = event => {
     setCoords((old) => ({
-      test: console.log(old),
       x: event.clientX - event.target.offsetLeft,
       y: event.clientY - event.target.offsetTop,
     }));
   };
-  const [globalMouse, setGlobalMouse] = useState({ x: 200, y: 200, pressed: false });
+  const [globalMouse, setGlobalMouse] = useState({ startX: 0, startY: 0, x: 0, y: 0, pressed: false });
   useEffect(() => {
     //get global mouse coordinates
     const handleWindowMouseMove = event => {
+
+      setGlobalMouse((old) => {
+        console.log(event.screenX, event.screenY, old.x, old.y, old.startX, old.startY)
+        console.log("PIXEL RATIO: " + window.devicePixelRatio)
+        if (old.startDrag) {
+          console.log(`setting start position to ${[event.screenX, event.screenY]} `)
+          return {
+            ...old,
+            startDrag: false,
+            startX: (event.screenX / window.devicePixelRatio) - old.x,
+            startY: (event.screenY / window.devicePixelRatio) - old.y,
+            // x: event.screenX - (event.screenX + old.x),
+            // y: event.screenY - (event.screenY + old.y),
+          }
+        }
+        return {
+          ...old,
+          x: (event.screenX / window.devicePixelRatio) - old.startX,
+          y: (event.screenY / window.devicePixelRatio) - old.startY,
+        }
+      })
+    }
+    if (globalMouse.pressed) {
       setGlobalMouse((old) => ({
         ...old,
-        x: event.screenX, y: event.screenY,
+        startDrag: true,
       }));
-    };
-    console.log(globalMouse.pressed + "USEEFECTMOUSE")
-    if (globalMouse.pressed) {
       window.addEventListener('mousemove', handleWindowMouseMove);
     } else {
+      setGlobalMouse((old) => ({
+        ...old,
+        startDrag: false,
+      }));
       window.removeEventListener('mousemove', handleWindowMouseMove)
     }
     return () => {
@@ -67,15 +90,23 @@ function SpotifyComponent() {
     if (collapsed) {
       currentState = overlayStates.collapsed
     }
+    let position = {
+      x: globalMouse.x,
+      y: globalMouse.y
+    }
+    if (position.x < 5) position.x = 5
+    if (position.y < 5) position.y = 5
+    // if (position.x > ) position.x = 1000
+    // if (position.y > 500) position.y = 500
     const style = {
       width: "430px",
       height: "150px",
       'clip-path': createClipPath(currentState),
       transition: `clip-path ${currentState.transition}`,
-      //background: "red",
+      background: "none",
       position: "fixed",
-      top: globalMouse.y - 200 + "px",
-      left: globalMouse.x - 200 + "px",
+      top: position.y + "px",
+      left: position.x + "px",
       "z-index": "999",
       overflow: "hidden"
     };
@@ -123,15 +154,20 @@ function SpotifyComponent() {
   const percentDone = trackPosition / spotifyData.length
   const collapsedTag = collapsed ? ' collapsed' : ''
   const dragTag = globalMouse.pressed ? ' dragging' : ''
+
   return (
-    <aside>
+    <aside style={{
+      //background: "blue",
+      width: "100%",
+      height: "100%"
+    }}
+      onMouseDown={() => setGlobalMouse((old) => ({ ...old, pressed: true }))}
+      onMouseUp={() => setGlobalMouse((old) => ({ ...old, pressed: false }))}
+      onMouseMove={handleMouseMove}>
       <style>{`html { overflow: hidden }`}</style>
       <ScopedStylesheet url={new URL("styles/App.css", import.meta.url)}>
         <div className={'spotify-component' + collapsedTag + dragTag}
           onClick={() => collapsed && setCollapsed(oldState => !oldState)}
-          onMouseDown={() => setGlobalMouse((old) => ({ ...old, pressed: true }))}
-          onMouseUp={() => setGlobalMouse((old) => ({ ...old, pressed: false }))}
-          onMouseMove={handleMouseMove}
         >
           <img
             className={'album-art ' + collapsedTag}
