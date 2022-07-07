@@ -4,44 +4,86 @@
 // import ExpandAlt from './images/expand-alt.svg'
 // import Shrink from './images/down-left-and-up-right-to-center-solid.svg'
 import React from 'https://npm.tfl.dev/react'
-import ScopedStylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/scoped-stylesheet/scoped-stylesheet.js";
-import Stylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/stylesheet/stylesheet.js";
-import jumper from "https://tfl.dev/@truffle/utils@0.0.1/jumper/jumper.js";
+import ScopedStylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/scoped-stylesheet/scoped-stylesheet.js"
+import Stylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/stylesheet/stylesheet.js"
+import jumper from "https://tfl.dev/@truffle/utils@0.0.1/jumper/jumper.js"
 import { useEffect, useState } from 'https://npm.tfl.dev/react'
-
+function createIframeStyle(toolTip, collapsed, globalMouse) {
+  function createClipPath({ top, right, bottom, left }) {
+    return `inset(calc(100% - ${top}) calc(100% - ${right}) calc(100% - ${bottom}) calc(100% - ${left}))`
+  }
+  const overlayStates = {
+    fullSize: { top: "71%", right: "415px", bottom: "100%", left: "100%", transition: "0s" },
+    fullSizeToolTip: { top: "96%", right: "415px", bottom: "100%", left: "100%", transition: "0s" },
+    collapsed: { top: "50px", right: "215px", bottom: "100%", left: "100%", transition: "0.5s" }
+  }
+  let currentState = overlayStates.fullSize
+  if (toolTip) {
+    currentState = overlayStates.fullSizeToolTip
+  }
+  if (collapsed) {
+    currentState = overlayStates.collapsed
+  }
+  let position = {
+    x: globalMouse.x,
+    y: globalMouse.y
+  }
+  if (position.x < 5) position.x = 5
+  if (position.y < 5) position.y = 5
+  // if (position.x > ) position.x = 1000
+  // if (position.y > 500) position.y = 500
+  console.log(globalMouse)
+  let style = {
+    width: "430px",
+    height: "150px",
+    'clip-path': createClipPath(currentState),
+    transition: `clip-path ${currentState.transition}`,
+    background: "orange",
+    position: "fixed",
+    top: `${position.y}px`,
+    left: `${position.x}px`,
+    "z-index": "999",
+    overflow: "hidden"
+  }
+  if (globalMouse.pressed) {
+    style = {
+      width: "100vw",
+      height: "100vh",
+      'clip-path': 'none',
+      transition: `none`,
+      background: "none",
+      position: "fixed",
+      top: `0`,
+      left: `0`,
+      "z-index": "999",
+      overflow: "hidden"
+    }
+  }
+  return style
+}
 function SpotifyComponent() {
   /* start of draggable code */
-  //thanks bobby https://bobbyhadz.com/blog/react-get-mouse-position
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
-  const handleMouseMove = event => {
-    setCoords((old) => ({
-      x: event.clientX - event.target.offsetLeft,
-      y: event.clientY - event.target.offsetTop,
-    }));
-  };
-  const [globalMouse, setGlobalMouse] = useState({ startX: 0, startY: 0, x: 0, y: 0, pressed: false });
+  //thanks bobby for the base https://bobbyhadz.com/blog/react-get-mouse-position
+  const [globalMouse, setGlobalMouse] = useState({ startX: 0, startY: 0, x: 0, y: 0, windowHeight: 1000, windowWidth: 1000, pressed: false })
+  const [iframeStyle, setIframeStyle] = useState(createIframeStyle(false, false, globalMouse))
   useEffect(() => {
     //get global mouse coordinates
     const handleWindowMouseMove = event => {
-
       setGlobalMouse((old) => {
-        console.log(event.screenX, event.screenY, old.x, old.y, old.startX, old.startY)
-        console.log("PIXEL RATIO: " + window.devicePixelRatio)
-        if (old.startDrag) {
-          console.log(`setting start position to ${[event.screenX, event.screenY]} `)
+        console.log(event.clientX, event.clientY, old.x, old.y, old.startX, old.startY)
+        if (old.startDrag && iframeStyle.width == "100vw") {
+          console.log(`setting start position to ${[event.clientX, event.clientY]} `)
           return {
             ...old,
             startDrag: false,
-            startX: (event.screenX / window.devicePixelRatio) - old.x,
-            startY: (event.screenY / window.devicePixelRatio) - old.y,
-            // x: event.screenX - (event.screenX + old.x),
-            // y: event.screenY - (event.screenY + old.y),
+            startX: (event.clientX) - old.x,
+            startY: (event.clientY) - old.y
           }
         }
         return {
           ...old,
-          x: (event.screenX / window.devicePixelRatio) - old.startX,
-          y: (event.screenY / window.devicePixelRatio) - old.startY,
+          x: (event.clientX) - old.startX,
+          y: (event.clientY) - old.startY,
         }
       })
     }
@@ -49,19 +91,19 @@ function SpotifyComponent() {
       setGlobalMouse((old) => ({
         ...old,
         startDrag: true,
-      }));
-      window.addEventListener('mousemove', handleWindowMouseMove);
+      }))
+      window.addEventListener('mousemove', handleWindowMouseMove)
     } else {
       setGlobalMouse((old) => ({
         ...old,
         startDrag: false,
-      }));
+      }))
       window.removeEventListener('mousemove', handleWindowMouseMove)
     }
     return () => {
-      window.removeEventListener('mousemove', handleWindowMouseMove);
-    };
-  }, [globalMouse.pressed]);
+      window.removeEventListener('mousemove', handleWindowMouseMove)
+    }
+  }, [globalMouse.pressed, iframeStyle.width])
   /* end of draggable code */
   // console.log(globalMousePos)
   const [spotifyData, setSpotifyData] = useState()
@@ -73,50 +115,20 @@ function SpotifyComponent() {
   const workerUrl = 'https://spotify-status-updater.shanecranor.workers.dev/'
   const orgID = 'shane'
   useEffect(() => {
-    const overlayStates = {
-      fullSize: { top: "71%", right: "415px", bottom: "100%", left: "100%", transition: "0s" },
-      fullSizeToolTip: { top: "96%", right: "415px", bottom: "100%", left: "100%", transition: "0s" },
-      collapsed: { top: "50px", right: "215px", bottom: "100%", left: "100%", transition: "0.5s" }
+    async function setStyles() {
+      const style = createIframeStyle(toolTip, collapsed, globalMouse)
+      console.log("JUMPING")
+      await jumper.call("layout.applyLayoutConfigSteps", {
+        layoutConfigSteps: [
+          { action: "useSubject" }, // start with our iframe
+          { action: "setStyle", value: style },
+        ],
+      })
+      console.log("WE HAVE JUMPED")
+      setIframeStyle(style)
     }
-
-    function createClipPath({ top, right, bottom, left }) {
-      return `inset(calc(100% - ${top}) calc(100% - ${right}) calc(100% - ${bottom}) calc(100% - ${left}))`
-    }
-
-    let currentState = overlayStates.fullSize
-    if (toolTip) {
-      currentState = overlayStates.fullSizeToolTip
-    }
-    if (collapsed) {
-      currentState = overlayStates.collapsed
-    }
-    let position = {
-      x: globalMouse.x,
-      y: globalMouse.y
-    }
-    if (position.x < 5) position.x = 5
-    if (position.y < 5) position.y = 5
-    // if (position.x > ) position.x = 1000
-    // if (position.y > 500) position.y = 500
-    const style = {
-      width: "430px",
-      height: "150px",
-      'clip-path': createClipPath(currentState),
-      transition: `clip-path ${currentState.transition}`,
-      background: "none",
-      position: "fixed",
-      top: position.y + "px",
-      left: position.x + "px",
-      "z-index": "999",
-      overflow: "hidden"
-    };
-    jumper.call("layout.applyLayoutConfigSteps", {
-      layoutConfigSteps: [
-        { action: "useSubject" }, // start with our iframe
-        { action: "setStyle", value: style },
-      ],
-    });
-  }, [collapsed, toolTip, globalMouse]);
+    setStyles()
+  }, [collapsed, toolTip, globalMouse])
 
   useEffect(() => {
     async function fetchData() {
@@ -137,7 +149,7 @@ function SpotifyComponent() {
     return () => (clearInterval(fetchInterval))
   }, [])
   //update time
-  const timeResolution = 200;
+  const timeResolution = 200
   useEffect(() => {
     const timeUpdateInterval = setInterval(() => {
       if (!spotifyData) return
@@ -154,16 +166,19 @@ function SpotifyComponent() {
   const percentDone = trackPosition / spotifyData.length
   const collapsedTag = collapsed ? ' collapsed' : ''
   const dragTag = globalMouse.pressed ? ' dragging' : ''
-
   return (
-    <aside style={{
-      //background: "blue",
-      width: "100%",
-      height: "100%"
-    }}
+    <aside
+      style={{
+        background: "blue",
+        position: "absolute",
+        top: (globalMouse.pressed ? globalMouse.y + "px" : "0"),
+        left: (globalMouse.pressed ? globalMouse.x + "px" : "0"),
+        width: "100%",
+        height: "100%"
+      }}
       onMouseDown={() => setGlobalMouse((old) => ({ ...old, pressed: true }))}
       onMouseUp={() => setGlobalMouse((old) => ({ ...old, pressed: false }))}
-      onMouseMove={handleMouseMove}>
+    >
       <style>{`html { overflow: hidden }`}</style>
       <ScopedStylesheet url={new URL("styles/App.css", import.meta.url)}>
         <div className={'spotify-component' + collapsedTag + dragTag}
