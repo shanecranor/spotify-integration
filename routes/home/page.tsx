@@ -1,6 +1,6 @@
 import React from "https://npm.tfl.dev/react";
 import Home from "../../components/home/home.tsx";
-import SpotifyComponent from "../../components/spotify-component/SpotifyComponent.js";
+import SpotifyComponent from "../../components/spotify-component/SpotifyComponent.jsx";
 import { gql, useQuery } from "https://tfl.dev/@truffle/api@0.0.1/client.js";
 
 const query = gql`{ time }`;
@@ -14,7 +14,7 @@ export default function HomePage() {
   return (
     <>
       HOme...
-      <SpotifyComponent/>
+      <SpotifyComponent />
       {/* <Home /> */}
     </>
   );
