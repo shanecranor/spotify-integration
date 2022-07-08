@@ -1,15 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600&display=swap");
-.dragging {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+:root {
+  --tfl-color-bg-fill: #ffffff;
 }
 
 .spotify-component {
   --spotify-alpha: 0.95;
-  --background-tertiary: rgba(40,40,40, var(--spotify-alpha));
-  --background-primary: rgba(0,0,0, var(--spotify-alpha));
+  --background-tertiary: rgba(40, 40, 40, var(--spotify-alpha));
+  --background-primary: rgba(0, 0, 0, var(--spotify-alpha));
   --background-tooltip: #71DBDB;
   --primary: #71DBDB;
   --spotify-width: 400px;
@@ -20,52 +17,76 @@
   width: var(--spotify-width);
   height: var(--spotify-height);
   margin-top: var(--top-margin);
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-transition: height 0.5s, margin 0.5s, width 0.5s;
   transition: height 0.5s, margin 0.5s, width 0.5s;
   background: var(--background-tertiary);
   color: white;
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, calc(0.3 * var(--spotify-alpha)));
+  -webkit-box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, calc(0.3 * var(--spotify-alpha)));
+          box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, calc(0.3 * var(--spotify-alpha)));
 }
+
 .spotify-component > .controls {
   pointer-events: none;
+  -webkit-transition: -webkit-filter 0.5s;
+  transition: -webkit-filter 0.5s;
   transition: filter 0.5s;
-  filter: opacity(1);
-  align-self: flex-start;
+  transition: filter 0.5s, -webkit-filter 0.5s;
+  -webkit-filter: opacity(1);
+          filter: opacity(1);
+  -ms-flex-item-align: start;
+      align-self: flex-start;
   width: inherit;
   text-align: right;
   position: absolute;
   font-weight: 400;
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   white-space: nowrap;
 }
+
 .spotify-component > .controls > div {
   pointer-events: all;
   cursor: pointer;
   padding: 5px 10px 0px 5px;
   display: inline-block;
 }
+
 .spotify-component > .album-art {
   pointer-events: none;
   height: inherit;
 }
+
 .spotify-component > .song-info {
   width: 100%;
   height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   padding-left: 16px;
 }
+
 .spotify-component > .song-info > .artist-title-container {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   padding-top: 6px;
   height: 100%;
   width: calc(var(--spotify-width) - var(--spotify-height) - 75px);
+  -webkit-transition: width 0.5s;
   transition: width 0.5s;
 }
+
 .spotify-component > .song-info > .artist-title-container > .song-title {
+  -webkit-transition: line-height 0.5s, margin 0.5s;
   transition: line-height 0.5s, margin 0.5s;
   line-height: 24px;
   font-size: 16px;
@@ -74,14 +95,18 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .spotify-component > .song-info > .artist-title-container > .song-title > a {
   color: white;
   text-decoration: none;
 }
+
 .spotify-component > .song-info > .artist-title-container > .song-title > a:hover {
   text-decoration: underline;
 }
+
 .spotify-component > .song-info > .artist-title-container > .artist-name {
+  -webkit-transition: padding 0.5s;
   transition: padding 0.5s;
   padding-top: 1px;
   font-size: 14px;
@@ -90,51 +115,65 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .spotify-component > .song-info > .artist-title-container > .artist-name > p {
   display: inline;
 }
+
 .spotify-component > .song-info > .artist-title-container > .artist-name > p:after {
   content: ", ";
 }
+
 .spotify-component > .song-info > .artist-title-container > .artist-name > p:last-child:after {
   content: "";
 }
+
 .spotify-component > .song-info > .artist-title-container > .artist-name > p > a {
   color: white;
   text-decoration: none;
 }
+
 .spotify-component > .song-info > .artist-title-container > .artist-name > p > a:hover {
   text-decoration: underline;
 }
+
 .spotify-component > .song-info > .progress-text-container {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 400;
   font-size: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   padding-bottom: 5px;
   margin-right: 16px;
 }
+
 .spotify-component > .song-info > .progress-text-container > .progress {
   text-align: left;
   width: 100%;
 }
+
 .spotify-component > .song-info > .progress-text-container > .length {
   text-align: right;
   width: 100%;
 }
+
 .spotify-component > .song-info > .progress-bar-outer {
-  flex-shrink: 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
   background: rgba(255, 255, 255, 0.2);
   height: 4px;
   border-radius: 10px;
   margin-right: 16px;
   margin-bottom: 9px;
 }
+
 .spotify-component > .song-info > .progress-bar-outer > .progress-bar-inner {
+  --song-position: 0%;
   border-radius: inherit;
   height: 100%;
   background: var(--primary);
-  width: min(var(--song-position), 100%);
+  width: MIN(var(--song-position), 100%);
 }
 
 .spotify-component.collapsed {
@@ -142,24 +181,31 @@
   width: var(--spotify-min-width);
   height: var(--spotify-min-height);
 }
+
 .spotify-component.collapsed > .controls {
-  filter: opacity(0);
+  -webkit-filter: opacity(0);
+          filter: opacity(0);
   pointer-events: none;
 }
+
 .spotify-component.collapsed > .controls > div {
   pointer-events: none;
 }
+
 .spotify-component.collapsed > .album-art {
   height: inherit;
 }
+
 .spotify-component.collapsed > .song-info > .artist-title-container {
   width: calc(var(--spotify-min-width) - var(--spotify-min-height) - 20px);
 }
+
 .spotify-component.collapsed > .song-info > .artist-title-container > .song-title {
   pointer-events: none;
   line-height: 20px;
   margin-left: -7px;
 }
+
 .spotify-component.collapsed > .song-info > .artist-title-container > .artist-name {
   pointer-events: none;
   padding-left: 250px;
@@ -167,43 +213,75 @@
 
 .tooltip:before {
   content: "";
+  -webkit-transition: -webkit-transform 0.25s, -webkit-filter 0.25s;
+  transition: -webkit-transform 0.25s, -webkit-filter 0.25s;
   transition: transform 0.25s, filter 0.25s;
-  transform: translateY(-14.1px) translateX(-5px);
-  filter: opacity(0);
+  transition: transform 0.25s, filter 0.25s, -webkit-transform 0.25s, -webkit-filter 0.25s;
+  -webkit-transform: translateY(-14.1px) translateX(-5px);
+          transform: translateY(-14.1px) translateX(-5px);
+  -webkit-filter: opacity(0);
+          filter: opacity(0);
 }
+
 .tooltip:after {
   content: "";
+  -webkit-transition: -webkit-transform 0.25s, -webkit-filter 0.25s;
+  transition: -webkit-transform 0.25s, -webkit-filter 0.25s;
   transition: transform 0.25s, filter 0.25s;
-  transform: translateY(-67px) translateX(-86.6%);
-  filter: opacity(0);
+  transition: transform 0.25s, filter 0.25s, -webkit-transform 0.25s, -webkit-filter 0.25s;
+  -webkit-transform: translateY(-67px) translateX(-86.6%);
+          transform: translateY(-67px) translateX(-86.6%);
+  -webkit-filter: opacity(0);
+          filter: opacity(0);
 }
+
 .tooltip:hover:before {
   content: "";
   display: block;
   position: absolute;
-  transform: translateY(-10px) translateX(-6px);
+  -webkit-transform: translateY(-10px) translateX(-6px);
+          transform: translateY(-10px) translateX(-6px);
   z-index: 99;
-  filter: opacity(1);
+  -webkit-filter: opacity(1);
+          filter: opacity(1);
   width: 0;
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-top: 10px solid black;
 }
+
 .tooltip:hover:after {
   font-size: 14px;
   display: block;
   content: attr(data-hover-text);
-  filter: opacity(1);
+  -webkit-filter: opacity(1);
+          filter: opacity(1);
   background: black;
   position: absolute;
   padding: 4px;
   border-radius: 4px;
   padding: 9.5px 10px 9.5px 10px;
 }
+
 .tooltip.help:hover:after {
-  transform: translateY(-63px) translateX(-86.6%);
+  -webkit-transform: translateY(-63px) translateX(-86.6%);
+          transform: translateY(-63px) translateX(-86.6%);
 }
+
 .tooltip.minimize:hover:after {
-  transform: translateY(-63px) translateX(-90%);
-}/*# sourceMappingURL=App.css.map */
+  -webkit-transform: translateY(-63px) translateX(-90%);
+          transform: translateY(-63px) translateX(-90%);
+}
+
+.dragging {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.dragging a {
+  pointer-events: none;
+}
+/*# sourceMappingURL=App.css.map */

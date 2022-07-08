@@ -1,11 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600&display=swap');
-.dragging{
-  user-select: none;
+
+:root {
+  --tfl-color-bg-fill: #ffffff;
 }
-.spotify-component{
+
+.spotify-component {
   --spotify-alpha: 0.95;
-  --background-tertiary: rgba(40,40,40, var(--spotify-alpha));
-  --background-primary: rgba(0,0,0, var(--spotify-alpha));
+  --background-tertiary: rgba(40, 40, 40, var(--spotify-alpha));
+  --background-primary: rgba(0, 0, 0, var(--spotify-alpha));
   --background-tooltip: #71DBDB;
   --primary: #71DBDB;
   --spotify-width: 400px;
@@ -19,13 +21,14 @@
   display: flex;
   align-items: center;
   //pretty styles
-  transition: height 0.5s, margin 0.5s, width 0.5s;  
+  transition: height 0.5s, margin 0.5s, width 0.5s;
   background: var(--background-tertiary);
   color: white;
   border-radius: 4px;
   overflow: hidden; //prevents square image from overflowing
   box-shadow: 0px 10px 10px 0px rgba(black, calc(0.3 * var(--spotify-alpha)));
-  >.controls{
+
+  >.controls {
     pointer-events: none;
     transition: filter 0.5s;
     filter: opacity(1);
@@ -35,32 +38,38 @@
     position: absolute;
     font-weight: 400;
     font-family: 'Inter', sans-serif;
-    >div{
+
+    >div {
       pointer-events: all;
       cursor: pointer;
       padding: 5px 10px 0px 5px;
       display: inline-block;
     }
+
     white-space: nowrap;
     // background: blue;
   }
-  >.album-art{
+
+  >.album-art {
     pointer-events: none;
     height: inherit;
   }
-  >.song-info{
+
+  >.song-info {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     padding-left: 16px;
-    >.artist-title-container{
+
+    >.artist-title-container {
       font-family: 'Poppins', sans-serif;
       padding-top: 6px;
       height: 100%;
       width: calc(var(--spotify-width) - var(--spotify-height) - 75px);
       transition: width 0.5s;
-      >.song-title{
+
+      >.song-title {
         transition: line-height 0.5s, margin 0.5s;
         line-height: 24px;
         font-size: 16px;
@@ -68,16 +77,19 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        >a{
+
+        >a {
           color: white;
           text-decoration: none;
-          &:hover{
+
+          &:hover {
             text-decoration: underline;
           }
         }
       }
-      >.artist-name{
-        
+
+      >.artist-name {
+
         transition: padding 0.5s;
         padding-top: 1px;
         font-size: 14px;
@@ -85,81 +97,98 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        
-        >p{
+
+        >p {
           display: inline;
+
           &:after {
             content: ", ";
           }
+
           &:last-child:after {
             content: "";
           }
-          >a{
+
+          >a {
             color: white;
             text-decoration: none;
-            &:hover{
+
+            &:hover {
               text-decoration: underline;
             }
           }
         }
       }
     }
-    >.progress-text-container{
+
+    >.progress-text-container {
       font-family: 'Inter', sans-serif;
       font-weight: 400;
       font-size: 10px;
       display: flex;
       padding-bottom: 5px;
       margin-right: 16px;
-      >.progress{
+
+      >.progress {
         text-align: left;
         width: 100%;
       }
-      >.length{
+
+      >.length {
         text-align: right;
         width: 100%;
       }
     }
-    >.progress-bar-outer{
+
+    >.progress-bar-outer {
       flex-shrink: 0;
       background: rgba(255, 255, 255, 0.2);
       height: 4px;
       border-radius: 10px;
       margin-right: 16px;
       margin-bottom: 9px;
-      >.progress-bar-inner{
+
+      >.progress-bar-inner {
+        --song-position: 0%;
         border-radius: inherit;
         height: 100%;
         background: var(--primary);
         //transition: width 0.1s linear;
-        width: min(var(--song-position), 100%);
+        width: MIN(var(--song-position), 100%);
       }
     }
   }
 }
-.spotify-component.collapsed{
+
+.spotify-component.collapsed {
   margin-top: calc(var(--top-margin) + var(--spotify-height) - var(--spotify-min-height));
   width: var(--spotify-min-width);
   height: var(--spotify-min-height);
-  >.controls{
+
+  >.controls {
     filter: opacity(0);
     pointer-events: none;
-    >div{
+
+    >div {
       pointer-events: none;
     }
   }
-  >.album-art{
+
+  >.album-art {
     height: inherit;
   }
-  >.song-info{
-    >.artist-title-container{
+
+  >.song-info {
+    >.artist-title-container {
       width: calc(var(--spotify-min-width) - var(--spotify-min-height) - 20px);
-      >.song-title{
+
+      >.song-title {
         pointer-events: none;
         line-height: 20px;
         margin-left: -7px;
       }
-      >.artist-name{
+
+      >.artist-name {
         pointer-events: none;
         padding-left: 250px;
       }
@@ -167,20 +196,22 @@
   }
 }
 
-.tooltip{
-  &:before{
+.tooltip {
+  &:before {
     content: "";
     transition: transform 0.25s, filter 0.25s;
     transform: translateY(-14.1px) translateX(-5px);
     filter: opacity(0);
   }
-  &:after{
+
+  &:after {
     content: "";
     transition: transform 0.25s, filter 0.25s;
     transform: translateY(-67px) translateX(-86.6%);
     filter: opacity(0);
   }
-  &:hover:before{
+
+  &:hover:before {
     content: "";
     display: block;
     position: absolute;
@@ -189,13 +220,14 @@
     z-index: 99;
     filter: opacity(1.0);
     //triangle
-    width: 0; 
-    height: 0; 
+    width: 0;
+    height: 0;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-top: 10px solid black;
   }
-  &:hover:after{
+
+  &:hover:after {
     font-size: 14px;
     display: block;
     content: attr(data-hover-text);
@@ -206,10 +238,21 @@
     border-radius: 4px;
     padding: 9.5px 10px 9.5px 10px;
   }
-  &.help:hover:after{
+
+  &.help:hover:after {
     transform: translateY(-63px) translateX(-86.6%);
   }
-  &.minimize:hover:after{
+
+  &.minimize:hover:after {
     transform: translateY(-63px) translateX(-90%);
+  }
+}
+
+.dragging {
+  user-select: none;
+
+  a {
+    //background: blue;
+    pointer-events: none;
   }
 }

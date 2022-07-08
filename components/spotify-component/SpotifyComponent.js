@@ -4,6 +4,7 @@
 // import ExpandAlt from './images/expand-alt.svg'
 // import Shrink from './images/down-left-and-up-right-to-center-solid.svg'
 import React from 'https://npm.tfl.dev/react'
+import Stylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/stylesheet/stylesheet.jsx"
 import ScopedStylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/scoped-stylesheet/scoped-stylesheet.js"
 import Stylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/stylesheet/stylesheet.js"
 import jumper from "https://tfl.dev/@truffle/utils@0.0.1/jumper/jumper.js"
@@ -13,7 +14,7 @@ function createIframeStyle(toolTip, collapsed, globalMouse) {
     return `inset(calc(100% - ${top}) calc(100% - ${right}) calc(100% - ${bottom}) calc(100% - ${left}))`
   }
   const overlayStates = {
-    fullSize: { top: "71%", right: "415px", bottom: "100%", left: "100%", transition: "0s" },
+    fullSize: { top: "304px", right: "415px", bottom: "100%", left: "100%", transition: "0s" },
     fullSizeToolTip: { top: "96%", right: "415px", bottom: "100%", left: "100%", transition: "0s" },
     collapsed: { top: "50px", right: "215px", bottom: "100%", left: "100%", transition: "0.5s" }
   }
@@ -32,46 +33,51 @@ function createIframeStyle(toolTip, collapsed, globalMouse) {
   if (position.y < 5) position.y = 5
   // if (position.x > ) position.x = 1000
   // if (position.y > 500) position.y = 500
-  console.log(globalMouse)
-  let style = {
-    width: "430px",
-    height: "150px",
-    'clip-path': createClipPath(currentState),
-    transition: `clip-path ${currentState.transition}`,
-    background: "orange",
+  // let style = {
+  //   width: "430px",
+  //   height: "150px",
+  //   // 'clip-path': createClipPath(currentState),
+  //   transition: `clip-path ${currentState.transition}`,
+  //   background: "orange",
+  //   position: "fixed",
+  //   top: `${position.y}px`,
+  //   left: `${position.x}px`,
+  //   "z-index": "999",
+  //   overflow: "hidden"
+  // }
+  // if (globalMouse.pressed) {
+  const style = {
+    width: "100vw",
+    height: "100vh",
+    "clip-path": `inset(${globalMouse.y}px calc(100% - ${globalMouse.x + 415}px) calc(100% - ${globalMouse.y + 145}px) ${globalMouse.x}px)`,
+    transition: `none`,
+    background: "none",
     position: "fixed",
-    top: `${position.y}px`,
-    left: `${position.x}px`,
+    top: `0`,
+    left: `0`,
     "z-index": "999",
     overflow: "hidden"
   }
-  if (globalMouse.pressed) {
-    style = {
-      width: "100vw",
-      height: "100vh",
-      'clip-path': 'none',
-      transition: `none`,
-      background: "none",
-      position: "fixed",
-      top: `0`,
-      left: `0`,
-      "z-index": "999",
-      overflow: "hidden"
-    }
-  }
+  // }
   return style
 }
 function SpotifyComponent() {
   /* start of draggable code */
   //thanks bobby for the base https://bobbyhadz.com/blog/react-get-mouse-position
-  const [globalMouse, setGlobalMouse] = useState({ startX: 0, startY: 0, x: 0, y: 0, windowHeight: 1000, windowWidth: 1000, pressed: false })
-  const [iframeStyle, setIframeStyle] = useState(createIframeStyle(false, false, globalMouse))
+  const [globalMouse, setGlobalMouse] = useState(
+    {
+      startX: 0, startY: 0,
+      x: 0, y: 0,
+      windowHeight: 1000, windowWidth: 1000,
+      pressed: false
+    }
+  )
   useEffect(() => {
     //get global mouse coordinates
     const handleWindowMouseMove = event => {
       setGlobalMouse((old) => {
         console.log(event.clientX, event.clientY, old.x, old.y, old.startX, old.startY)
-        if (old.startDrag && iframeStyle.width == "100vw") {
+        if (old.startDrag) {
           console.log(`setting start position to ${[event.clientX, event.clientY]} `)
           return {
             ...old,
@@ -103,9 +109,8 @@ function SpotifyComponent() {
     return () => {
       window.removeEventListener('mousemove', handleWindowMouseMove)
     }
-  }, [globalMouse.pressed, iframeStyle.width])
+  }, [globalMouse.pressed])
   /* end of draggable code */
-  // console.log(globalMousePos)
   const [spotifyData, setSpotifyData] = useState()
   const [toolTip, setToolTip] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
@@ -117,15 +122,12 @@ function SpotifyComponent() {
   useEffect(() => {
     async function setStyles() {
       const style = createIframeStyle(toolTip, collapsed, globalMouse)
-      console.log("JUMPING")
       await jumper.call("layout.applyLayoutConfigSteps", {
         layoutConfigSteps: [
           { action: "useSubject" }, // start with our iframe
           { action: "setStyle", value: style },
         ],
       })
-      console.log("WE HAVE JUMPED")
-      setIframeStyle(style)
     }
     setStyles()
   }, [collapsed, toolTip, globalMouse])
@@ -168,17 +170,23 @@ function SpotifyComponent() {
   const dragTag = globalMouse.pressed ? ' dragging' : ''
   return (
     <aside
+      draggable={true}
       style={{
-        background: "blue",
+        background: "none",
         position: "absolute",
-        top: (globalMouse.pressed ? globalMouse.y + "px" : "0"),
-        left: (globalMouse.pressed ? globalMouse.x + "px" : "0"),
+        top: globalMouse.y + "px",
+        left: globalMouse.x + "px",
         width: "100%",
         height: "100%"
       }}
-      onMouseDown={() => setGlobalMouse((old) => ({ ...old, pressed: true }))}
+      onDragStart={(e) => {
+        e.preventDefault()
+        setGlobalMouse((old) => ({ ...old, pressed: true }))
+      }}
+      // onMouseMove={() => setGlobalMouse((old) => ({ ...old, pressed: true }))}
       onMouseUp={() => setGlobalMouse((old) => ({ ...old, pressed: false }))}
     >
+      <Stylesheet url={new URL('./styles/root.css', import.meta.url)} />
       <style>{`html { overflow: hidden }`}</style>
       <ScopedStylesheet url={new URL("styles/App.css", import.meta.url)}>
         <div className={'spotify-component' + collapsedTag + dragTag}
@@ -222,12 +230,12 @@ function SongInfo({ title, link, artists, length, percentDone, progressDate }) {
     <div className={'song-info '}>
       <div className={'artist-title-container '}>
         <div className='song-title'>
-          <a href={link} target="_blank" rel="noopener noreferrer">{title}</a>
+          <a draggable="false" href={link} target="_blank" rel="noopener noreferrer">{title}</a>
         </div>
         <div className='artist-name'>
           {artists.map(artist => (
             <p key={artist}>
-              <a href={artist.external_urls.spotify} target="_blank" rel="noopener noreferrer">
+              <a draggable="false" href={artist.external_urls.spotify} target="_blank" rel="noopener noreferrer">
                 {artist.name}
               </a>
             </p>))}
