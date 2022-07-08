@@ -4,7 +4,6 @@
 // import ExpandAlt from './images/expand-alt.svg'
 // import Shrink from './images/down-left-and-up-right-to-center-solid.svg'
 import React from 'https://npm.tfl.dev/react'
-import Stylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/stylesheet/stylesheet.jsx"
 import ScopedStylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/scoped-stylesheet/scoped-stylesheet.js"
 import Stylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/stylesheet/stylesheet.js"
 import jumper from "https://tfl.dev/@truffle/utils@0.0.1/jumper/jumper.js"
