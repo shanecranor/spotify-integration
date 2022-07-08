@@ -1,9 +1,6 @@
 import React, { useEffect } from "https://npm.tfl.dev/react";
-import SpotifyComponent from "../../components/spotify-component/SpotifyComponent.jsx";
-import { toDist } from "https://tfl.dev/@truffle/distribute@1.0.0/format/wc/index.js";
+import SpotifyComponent from "../../components/spotify-component/SpotifyComponent.js";
 
-function Home() {
+export default function Home() {
   return <SpotifyComponent />;
 }
-
-export default toDist("react", Home, import.meta.url);
