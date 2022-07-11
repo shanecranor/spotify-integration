@@ -44,7 +44,7 @@ function createIframeStyle(toolTip, collapsed, globalMouse) {
   //   "z-index": "999",
   //   overflow: "hidden"
   // }
-  // if (globalMouse.pressed) {
+  // 
   const style = {
     width: "100vw",
     height: "100vh",
@@ -57,7 +57,9 @@ function createIframeStyle(toolTip, collapsed, globalMouse) {
     "z-index": "999",
     overflow: "hidden"
   }
-  // }
+  if (globalMouse.pressed) {
+    style["clip-path"] = "none"
+  }
   return style
 }
 function SpotifyComponent() {
@@ -150,7 +152,7 @@ function SpotifyComponent() {
     return () => (clearInterval(fetchInterval))
   }, [])
   //update time
-  const timeResolution = 200
+  const timeResolution = 1000
   useEffect(() => {
     const timeUpdateInterval = setInterval(() => {
       if (!spotifyData) return
