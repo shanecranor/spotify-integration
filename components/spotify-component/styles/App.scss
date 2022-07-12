@@ -247,12 +247,3 @@
     transform: translateY(-63px) translateX(-90%);
   }
 }
-
-.dragging {
-  user-select: none;
-
-  a {
-    //background: blue;
-    pointer-events: none;
-  }
-}

@@ -273,15 +273,4 @@
   -webkit-transform: translateY(-63px) translateX(-90%);
           transform: translateY(-63px) translateX(-90%);
 }
-
-.dragging {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-}
-
-.dragging a {
-  pointer-events: none;
-}
 /*# sourceMappingURL=App.css.map */

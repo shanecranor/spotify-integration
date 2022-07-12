@@ -4,114 +4,23 @@
 // import ExpandAlt from './images/expand-alt.svg'
 // import Shrink from './images/down-left-and-up-right-to-center-solid.svg'
 import React from 'https://npm.tfl.dev/react'
+import Draggable from '../draggable/draggable.jsx'
 import ScopedStylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/scoped-stylesheet/scoped-stylesheet.js"
 import Stylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/stylesheet/stylesheet.js"
 import jumper from "https://tfl.dev/@truffle/utils@0.0.1/jumper/jumper.js"
 import { useEffect, useState } from 'https://npm.tfl.dev/react'
-function createIframeStyle(toolTip, collapsed, globalMouse) {
-  function createClipPath({ top, right, bottom, left }) {
-    return `inset(calc(100% - ${top}) calc(100% - ${right}) calc(100% - ${bottom}) calc(100% - ${left}))`
-  }
-  const overlayStates = {
-    fullSize: { top: "304px", right: "415px", bottom: "100%", left: "100%", transition: "0s" },
-    fullSizeToolTip: { top: "96%", right: "415px", bottom: "100%", left: "100%", transition: "0s" },
-    collapsed: { top: "50px", right: "215px", bottom: "100%", left: "100%", transition: "0.5s" }
-  }
-  let currentState = overlayStates.fullSize
-  if (toolTip) {
-    currentState = overlayStates.fullSizeToolTip
-  }
-  if (collapsed) {
-    currentState = overlayStates.collapsed
-  }
-  let position = {
-    x: globalMouse.x,
-    y: globalMouse.y
-  }
-  if (position.x < 5) position.x = 5
-  if (position.y < 5) position.y = 5
-  // if (position.x > ) position.x = 1000
-  // if (position.y > 500) position.y = 500
-  // let style = {
-  //   width: "430px",
-  //   height: "150px",
-  //   // 'clip-path': createClipPath(currentState),
-  //   transition: `clip-path ${currentState.transition}`,
-  //   background: "orange",
-  //   position: "fixed",
-  //   top: `${position.y}px`,
-  //   left: `${position.x}px`,
-  //   "z-index": "999",
-  //   overflow: "hidden"
-  // }
-  // 
-  const style = {
-    width: "100vw",
-    height: "100vh",
-    "clip-path": `inset(${globalMouse.y}px calc(100% - ${globalMouse.x + 415}px) calc(100% - ${globalMouse.y + 145}px) ${globalMouse.x}px)`,
-    transition: `none`,
-    background: "none",
-    position: "fixed",
-    top: `0`,
-    left: `0`,
-    "z-index": "999",
-    overflow: "hidden"
-  }
-  if (globalMouse.pressed) {
-    style["clip-path"] = "none"
-  }
-  return style
-}
+const defaultModifier = { top: -43, right: 0, bottom: 0, left: 0, transition: "none" }
 function SpotifyComponent() {
-  /* start of draggable code */
-  //thanks bobby for the base https://bobbyhadz.com/blog/react-get-mouse-position
-  const [globalMouse, setGlobalMouse] = useState(
+  //set base dimensions
+  const base = { x: 415, y: 150 }
+  const [dragProps, setDragProps] = useState(
     {
-      startX: 0, startY: 0,
-      x: 0, y: 0,
-      windowHeight: 1000, windowWidth: 1000,
-      pressed: false
-    }
-  )
-  useEffect(() => {
-    //get global mouse coordinates
-    const handleWindowMouseMove = event => {
-      setGlobalMouse((old) => {
-        console.log(event.clientX, event.clientY, old.x, old.y, old.startX, old.startY)
-        if (old.startDrag) {
-          console.log(`setting start position to ${[event.clientX, event.clientY]} `)
-          return {
-            ...old,
-            startDrag: false,
-            startX: (event.clientX) - old.x,
-            startY: (event.clientY) - old.y
-          }
-        }
-        return {
-          ...old,
-          x: (event.clientX) - old.startX,
-          y: (event.clientY) - old.startY,
-        }
-      })
-    }
-    if (globalMouse.pressed) {
-      setGlobalMouse((old) => ({
-        ...old,
-        startDrag: true,
-      }))
-      window.addEventListener('mousemove', handleWindowMouseMove)
-    } else {
-      setGlobalMouse((old) => ({
-        ...old,
-        startDrag: false,
-      }))
-      window.removeEventListener('mousemove', handleWindowMouseMove)
-    }
-    return () => {
-      window.removeEventListener('mousemove', handleWindowMouseMove)
-    }
-  }, [globalMouse.pressed])
-  /* end of draggable code */
+      dimensions: {
+        base: base,
+        modifiers: defaultModifier
+      },
+      defaultPosition: { x: 0, y: 0 }
+    })
   const [spotifyData, setSpotifyData] = useState()
   const [toolTip, setToolTip] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
@@ -121,17 +30,19 @@ function SpotifyComponent() {
   const workerUrl = 'https://spotify-status-updater.shanecranor.workers.dev/'
   const orgID = 'shane'
   useEffect(() => {
-    async function setStyles() {
-      const style = createIframeStyle(toolTip, collapsed, globalMouse)
-      await jumper.call("layout.applyLayoutConfigSteps", {
-        layoutConfigSteps: [
-          { action: "useSubject" }, // start with our iframe
-          { action: "setStyle", value: style },
-        ],
-      })
+    const overlayStates = {
+      fullSize: { ...defaultModifier },
+      collapsed: { ...defaultModifier, top: -98, right: -200, transition: `clip-path 0.5s ease` },
+      toolTip: { ...defaultModifier, top: 0 }
     }
-    setStyles()
-  }, [collapsed, toolTip, globalMouse])
+    let modifiers = overlayStates.fullSize
+    if (toolTip) modifiers = overlayStates.toolTip
+    if (collapsed) modifiers = overlayStates.collapsed
+    setDragProps((old) => ({
+      ...old,
+      dimensions: { ...old.dimensions, modifiers: modifiers }
+    }))
+  }, [collapsed, toolTip])
 
   useEffect(() => {
     async function fetchData() {
@@ -168,52 +79,39 @@ function SpotifyComponent() {
   const progressDate = new Date(Math.min(trackPosition, spotifyData.length))
   const percentDone = trackPosition / spotifyData.length
   const collapsedTag = collapsed ? ' collapsed' : ''
-  const dragTag = globalMouse.pressed ? ' dragging' : ''
   return (
-    <aside
-      draggable={true}
-      style={{
-        background: "none",
-        position: "absolute",
-        top: globalMouse.y + "px",
-        left: globalMouse.x + "px",
-        width: "100%",
-        height: "100%"
-      }}
-      onDragStart={(e) => {
-        e.preventDefault()
-        setGlobalMouse((old) => ({ ...old, pressed: true }))
-      }}
-      // onMouseMove={() => setGlobalMouse((old) => ({ ...old, pressed: true }))}
-      onMouseUp={() => setGlobalMouse((old) => ({ ...old, pressed: false }))}
-    >
+    <aside style={{ background: "none" }}>
       <Stylesheet url={new URL('./styles/root.css', import.meta.url)} />
       <style>{`html { overflow: hidden }`}</style>
-      <ScopedStylesheet url={new URL("styles/App.css", import.meta.url)}>
-        <div className={'spotify-component' + collapsedTag + dragTag}
-          onClick={() => collapsed && setCollapsed(oldState => !oldState)}
-        >
-          <img
-            className={'album-art ' + collapsedTag}
-            src={spotifyData.images[0].url} alt='album cover'
-          />
-          <SongInfo
-            title={spotifyData.title}
-            link={spotifyData.link}
-            artists={spotifyData.artists}
-            length={spotifyData.length}
-            percentDone={percentDone}
-            progressDate={progressDate}
-          />
-          <div className='controls' >
-            <div className='help tooltip' onMouseOver={() => setToolTip(true)} onMouseOut={() => setToolTip(false)}
-              data-hover-text='what the streamer is currently listening to'>?</div>
-            <div className='minimize tooltip' onMouseOver={() => setToolTip(true)} onMouseOut={() => setToolTip(false)}
-              data-hover-text='shrink the spotify overlay'
-              onClick={() => setCollapsed(oldState => !oldState)}>‒</div>
+      <Draggable
+        dimensions={dragProps.dimensions}
+        defaultPosition={dragProps.defaultPosition}>
+        <ScopedStylesheet url={new URL("styles/App.css", import.meta.url)}>
+          <div className={'spotify-component' + collapsedTag}
+            onClick={() => collapsed && setCollapsed(oldState => !oldState)}
+          >
+            <img
+              className={'album-art ' + collapsedTag}
+              src={spotifyData.images[0].url} alt='album cover'
+            />
+            <SongInfo
+              title={spotifyData.title}
+              link={spotifyData.link}
+              artists={spotifyData.artists}
+              length={spotifyData.length}
+              percentDone={percentDone}
+              progressDate={progressDate}
+            />
+            <div className='controls' >
+              <div className='help tooltip' onMouseOver={() => setToolTip(true)} onMouseOut={() => setToolTip(false)}
+                data-hover-text='what the streamer is currently listening to'>?</div>
+              <div className='minimize tooltip' onMouseOver={() => setToolTip(true)} onMouseOut={() => setToolTip(false)}
+                data-hover-text='shrink the spotify overlay'
+                onClick={() => setCollapsed(oldState => !oldState)}>‒</div>
+            </div>
           </div>
-        </div>
-      </ScopedStylesheet>
+        </ScopedStylesheet>
+      </Draggable>
     </aside>
   )
 }
