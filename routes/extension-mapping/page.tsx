@@ -4,13 +4,10 @@ import { toDist } from "https://tfl.dev/@truffle/distribute@1.0.0/format/wc/inde
 
 function Home() {
   return <>
-    <style>{`:root {
-	--tfl-color-bg-fill: rgba(0, 0, 0, 0) !important;
+    <style>{`
+	:host{--tfl-color-bg-fill: rgba(0, 0, 0, 0) !important;}
 }
-
-#root {
-	--tfl-color-bg-fill: rgba(0, 0, 0, 0) !important;
-}`}</style>
+`}</style>
     <SpotifyComponent />
   </>;
 }
