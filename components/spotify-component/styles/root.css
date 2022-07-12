@@ -1,3 +1,7 @@
 :root {
-	--tfl-color-bg-fill: transparent;
+	--tfl-color-bg-fill: rgba(0, 0, 0, 0) !important;
+}
+
+#root {
+	--tfl-color-bg-fill: rgba(0, 0, 0, 0) !important;
 }

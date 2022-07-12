@@ -32,39 +32,26 @@ export default function Draggable({ children, dimensions, defaultPosition }) {
 		{
 			...defaultPosition,
 			startX: 0, startY: 0,
-			pressed: false
+			pressed: false,
+			draggable: true
 		}
 	)
 	//mouse handling
 	useEffect(() => {
 		const handleWindowMouseMove = event => {
-			//check to see if start drag and on an element with the class "no-drag"
 			setGlobalMouse((old) => (
-				old.startDrag ?
-					{ //if startDrag store the starting mouse coords
-						...old, startDrag: false, //reset start drag
-						startX: (event.clientX) - old.x,
-						startY: (event.clientY) - old.y
-					}
-					:
-					{ //if not startDrag, 
-						...old,
-						x: (event.clientX) - old.startX,
-						y: (event.clientY) - old.startY,
-					}
+				{
+					...old,
+					x: (event.clientX) - old.startX,
+					y: (event.clientY) - old.startY,
+				}
 			))
 		}
-		//initiate drag by adding mousemove listener when mouse is pressed and dragging
 		if (globalMouse.pressed) {
-			setGlobalMouse((old) => ({
-				...old, startDrag: true,
-			}))
+			//initiate drag by adding mousemove listener when mouse is pressed and dragging
 			window.addEventListener('mousemove', handleWindowMouseMove)
 		} else {
 			//if mouse is not pressed, we can't be dragging, remove mouse move listener
-			setGlobalMouse((old) => ({
-				...old, startDrag: false,
-			}))
 			window.removeEventListener('mousemove', handleWindowMouseMove)
 		}
 		return () => {
@@ -89,24 +76,48 @@ export default function Draggable({ children, dimensions, defaultPosition }) {
 			position: "absolute",
 			top: y + "px",
 			left: x + "px",
-			width: "100%", height: "100%",
+			// width: "100%", height: "100%",
 			//disable text selection while dragging
 			"user-select": globalMouse.pressed ? "none" : "inherit",
-			//disable links while dragging
-			a: { "pointer-events": globalMouse.pressed ? "none" : "inherit" }
+
 		}
 	}
 	return (
-		<div className='draggable'
-			draggable={true}
-			style={positionStyle(globalMouse.x, globalMouse.y)}
-			onDragStart={(e) => {
-				e.preventDefault()
-				setGlobalMouse((old) => ({ ...old, pressed: true }))
-			}}
-			onMouseUp={() => setGlobalMouse((old) => ({ ...old, pressed: false }))}
-		>
-			{children}
-		</div>
+		<>
+			{/* <style>{ //disable links while dragging
+				`a{
+					pointer-events: ${globalMouse.pressed ? "none" : "inherit"}
+		 		}`
+			}</style> */}
+			<div className='draggable'
+				draggable={true}
+				style={{
+					position: "absolute",
+					top: "0px",
+					left: "0px"
+				}}
+				onMouseDown={(e) => {
+					console.log(e.target.className + "   mouse down tag name lol")
+					if (e.target.tagName === "A" || e.target.className.includes("prevent-drag")) {
+						setGlobalMouse((old) => ({ ...old, draggable: false }))
+					}
+				}}
+				onDragStart={(e) => {
+					e.preventDefault()
+					if (globalMouse.draggable) setGlobalMouse((old) => ({
+						...old, pressed: true,
+						startX: (e.clientX) - old.x,
+						startY: (e.clientY) - old.y
+					}))
+				}}
+				onMouseUp={(e) => {
+					setGlobalMouse((old) => ({ ...old, pressed: false, draggable: true }))
+				}}
+			>
+				<div style={positionStyle(globalMouse.x, globalMouse.y)}>
+					{children}
+				</div>
+			</div>
+		</>
 	)
 }
