@@ -76,48 +76,39 @@ export default function Draggable({ children, dimensions, defaultPosition }) {
 			position: "absolute",
 			top: y + "px",
 			left: x + "px",
-			// width: "100%", height: "100%",
 			//disable text selection while dragging
 			"user-select": globalMouse.pressed ? "none" : "inherit",
-
 		}
 	}
 	return (
-		<>
-			{/* <style>{ //disable links while dragging
-				`a{
-					pointer-events: ${globalMouse.pressed ? "none" : "inherit"}
-		 		}`
-			}</style> */}
-			<div className='draggable'
-				draggable={true}
-				style={{
-					position: "absolute",
-					top: "0px",
-					left: "0px"
-				}}
-				onMouseDown={(e) => {
-					console.log(e.target.className + "   mouse down tag name lol")
-					if (e.target.tagName === "A" || e.target.className.includes("prevent-drag")) {
-						setGlobalMouse((old) => ({ ...old, draggable: false }))
-					}
-				}}
-				onDragStart={(e) => {
-					e.preventDefault()
-					if (globalMouse.draggable) setGlobalMouse((old) => ({
-						...old, pressed: true,
-						startX: (e.clientX) - old.x,
-						startY: (e.clientY) - old.y
-					}))
-				}}
-				onMouseUp={(e) => {
-					setGlobalMouse((old) => ({ ...old, pressed: false, draggable: true }))
-				}}
-			>
-				<div style={positionStyle(globalMouse.x, globalMouse.y)}>
-					{children}
-				</div>
+		<div className='draggable'
+			draggable={true}
+			style={{
+				position: "absolute",
+				top: "0px",
+				left: "0px"
+			}}
+			onMouseDown={(e) => {
+				console.log(e.target.className + "   mouse down tag name lol")
+				if (e.target.tagName === "A" || e.target.className.includes("prevent-drag")) {
+					setGlobalMouse((old) => ({ ...old, draggable: false }))
+				}
+			}}
+			onDragStart={(e) => {
+				e.preventDefault()
+				if (globalMouse.draggable) setGlobalMouse((old) => ({
+					...old, pressed: true,
+					startX: (e.clientX) - old.x,
+					startY: (e.clientY) - old.y
+				}))
+			}}
+			onMouseUp={(e) => {
+				setGlobalMouse((old) => ({ ...old, pressed: false, draggable: true }))
+			}}
+		>
+			<div style={positionStyle(globalMouse.x, globalMouse.y)}>
+				{children}
 			</div>
-		</>
+		</div>
 	)
 }
