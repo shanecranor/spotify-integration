@@ -78,7 +78,7 @@ function SpotifyComponent() {
     return () => (clearInterval(progressUpdateInterval))
   }, [spotifyData])
 
-  if (!spotifyData) return "loading"
+  if (!spotifyData) return <div>loading</div>
   const progressDate = new Date(Math.min(trackPosition, spotifyData.length))
   const percentDone = trackPosition / spotifyData.length
   const collapsedTag = collapsed ? ' collapsed' : ''
