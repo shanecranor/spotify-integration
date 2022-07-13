@@ -1,15 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600&display=swap');
 
-:root {
-  --tfl-color-bg-fill: #ffffff;
-}
 
 .spotify-component {
-  --spotify-alpha: 0.95;
-  --background-tertiary: rgba(40, 40, 40, var(--spotify-alpha));
-  --background-primary: rgba(0, 0, 0, var(--spotify-alpha));
-  --background-tooltip: #71DBDB;
-  --primary: #71DBDB;
+  // all of these colors will eventually be controlled by the --tfl css var stuff so creators can customize the way they want
+  --alpha-multiplier: 0.95;
+  --background-primary: rgba(40, 40, 40, var(--alpha-multiplier));
+  --background-tooltip: black;
+  --progress-bar-background: rgba(255, 255, 255, calc(0.2 * var(--alpha-multiplier)));
+  --progress-bar-complete: #71DBDB;
   --spotify-width: 400px;
   --spotify-height: 88px;
   --spotify-min-width: 200px;
@@ -19,35 +17,32 @@
   height: var(--spotify-height);
   margin-top: var(--top-margin);
   display: flex;
-  align-items: center;
   //pretty styles
   transition: height 0.5s, margin 0.5s, width 0.5s;
-  background: var(--background-tertiary);
+  background: var(--background-primary);
   color: white;
-  border-radius: 4px;
+  border-radius: var(--tfl-border-radius-md); //4px
   overflow: hidden; //prevents square image from overflowing
-  box-shadow: 0px 10px 10px 0px rgba(black, calc(0.3 * var(--spotify-alpha)));
+  box-shadow: 0px 10px 10px 0px rgba(black, calc(0.3 * var(--alpha-multiplier)));
 
   >.controls {
     pointer-events: none;
-    transition: filter 0.5s;
-    filter: opacity(1);
+    white-space: nowrap;
+    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+    position: absolute;
     align-self: flex-start;
     width: inherit;
     text-align: right;
-    position: absolute;
-    font-weight: 400;
-    font-family: 'Inter', sans-serif;
+    transition: filter 0.5s;
+    filter: opacity(1);
 
     >div {
       pointer-events: all;
+      display: inline-block;
       cursor: pointer;
       padding: 5px 10px 0px 5px;
-      display: inline-block;
     }
-
-    white-space: nowrap;
-    // background: blue;
   }
 
   >.album-art {
@@ -142,7 +137,7 @@
 
     >.progress-bar-outer {
       flex-shrink: 0;
-      background: rgba(255, 255, 255, 0.2);
+      background: var(--progress-bar-background);
       height: 4px;
       border-radius: 10px;
       margin-right: 16px;
@@ -152,7 +147,7 @@
         --song-position: 0%;
         border-radius: inherit;
         height: 100%;
-        background: var(--primary);
+        background: var(--progress-bar-complete);
         //transition: width 0.1s linear;
         width: MIN(var(--song-position), 100%);
       }
@@ -193,57 +188,5 @@
         padding-left: 250px;
       }
     }
-  }
-}
-
-.tooltip {
-  &:before {
-    content: "";
-    transition: transform 0.25s, filter 0.25s;
-    transform: translateY(-14.1px) translateX(-5px);
-    filter: opacity(0);
-  }
-
-  &:after {
-    content: "";
-    transition: transform 0.25s, filter 0.25s;
-    transform: translateY(-67px) translateX(-86.6%);
-    filter: opacity(0);
-  }
-
-  &:hover:before {
-    content: "";
-    display: block;
-    position: absolute;
-    //top: -12%;
-    transform: translateY(-10px) translateX(-6px);
-    z-index: 99;
-    filter: opacity(1.0);
-    //triangle
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 10px solid black;
-  }
-
-  &:hover:after {
-    font-size: 14px;
-    display: block;
-    content: attr(data-hover-text);
-    filter: opacity(1.0);
-    background: black;
-    position: absolute;
-    padding: 4px;
-    border-radius: 4px;
-    padding: 9.5px 10px 9.5px 10px;
-  }
-
-  &.help:hover:after {
-    transform: translateY(-63px) translateX(-86.6%);
-  }
-
-  &.minimize:hover:after {
-    transform: translateY(-63px) translateX(-90%);
   }
 }

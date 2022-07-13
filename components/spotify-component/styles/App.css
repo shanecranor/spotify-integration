@@ -1,14 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;500;600&display=swap");
-:root {
-  --tfl-color-bg-fill: #ffffff;
-}
-
 .spotify-component {
-  --spotify-alpha: 0.95;
-  --background-tertiary: rgba(40, 40, 40, var(--spotify-alpha));
-  --background-primary: rgba(0, 0, 0, var(--spotify-alpha));
-  --background-tooltip: #71DBDB;
-  --primary: #71DBDB;
+  --alpha-multiplier: 0.95;
+  --background-primary: rgba(40, 40, 40, var(--alpha-multiplier));
+  --background-tooltip: black;
+  --progress-bar-background: rgba(255, 255, 255, calc(0.2 * var(--alpha-multiplier)));
+  --progress-bar-complete: #71DBDB;
   --spotify-width: 400px;
   --spotify-height: 88px;
   --spotify-min-width: 200px;
@@ -20,42 +16,39 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   -webkit-transition: height 0.5s, margin 0.5s, width 0.5s;
   transition: height 0.5s, margin 0.5s, width 0.5s;
-  background: var(--background-tertiary);
+  background: var(--background-primary);
   color: white;
-  border-radius: 4px;
+  border-radius: var(--tfl-border-radius-md);
   overflow: hidden;
-  -webkit-box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, calc(0.3 * var(--spotify-alpha)));
-          box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, calc(0.3 * var(--spotify-alpha)));
+  -webkit-box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, calc(0.3 * var(--alpha-multiplier)));
+          box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, calc(0.3 * var(--alpha-multiplier)));
 }
 
 .spotify-component > .controls {
   pointer-events: none;
+  white-space: nowrap;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  position: absolute;
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+  width: inherit;
+  text-align: right;
   -webkit-transition: -webkit-filter 0.5s;
   transition: -webkit-filter 0.5s;
   transition: filter 0.5s;
   transition: filter 0.5s, -webkit-filter 0.5s;
   -webkit-filter: opacity(1);
           filter: opacity(1);
-  -ms-flex-item-align: start;
-      align-self: flex-start;
-  width: inherit;
-  text-align: right;
-  position: absolute;
-  font-weight: 400;
-  font-family: 'Inter', sans-serif;
-  white-space: nowrap;
 }
 
 .spotify-component > .controls > div {
   pointer-events: all;
+  display: inline-block;
   cursor: pointer;
   padding: 5px 10px 0px 5px;
-  display: inline-block;
 }
 
 .spotify-component > .album-art {
@@ -161,7 +154,7 @@
 .spotify-component > .song-info > .progress-bar-outer {
   -ms-flex-negative: 0;
       flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--progress-bar-background);
   height: 4px;
   border-radius: 10px;
   margin-right: 16px;
@@ -172,7 +165,7 @@
   --song-position: 0%;
   border-radius: inherit;
   height: 100%;
-  background: var(--primary);
+  background: var(--progress-bar-complete);
   width: MIN(var(--song-position), 100%);
 }
 
@@ -209,68 +202,5 @@
 .spotify-component.collapsed > .song-info > .artist-title-container > .artist-name {
   pointer-events: none;
   padding-left: 250px;
-}
-
-.tooltip:before {
-  content: "";
-  -webkit-transition: -webkit-transform 0.25s, -webkit-filter 0.25s;
-  transition: -webkit-transform 0.25s, -webkit-filter 0.25s;
-  transition: transform 0.25s, filter 0.25s;
-  transition: transform 0.25s, filter 0.25s, -webkit-transform 0.25s, -webkit-filter 0.25s;
-  -webkit-transform: translateY(-14.1px) translateX(-5px);
-          transform: translateY(-14.1px) translateX(-5px);
-  -webkit-filter: opacity(0);
-          filter: opacity(0);
-}
-
-.tooltip:after {
-  content: "";
-  -webkit-transition: -webkit-transform 0.25s, -webkit-filter 0.25s;
-  transition: -webkit-transform 0.25s, -webkit-filter 0.25s;
-  transition: transform 0.25s, filter 0.25s;
-  transition: transform 0.25s, filter 0.25s, -webkit-transform 0.25s, -webkit-filter 0.25s;
-  -webkit-transform: translateY(-67px) translateX(-86.6%);
-          transform: translateY(-67px) translateX(-86.6%);
-  -webkit-filter: opacity(0);
-          filter: opacity(0);
-}
-
-.tooltip:hover:before {
-  content: "";
-  display: block;
-  position: absolute;
-  -webkit-transform: translateY(-10px) translateX(-6px);
-          transform: translateY(-10px) translateX(-6px);
-  z-index: 99;
-  -webkit-filter: opacity(1);
-          filter: opacity(1);
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid black;
-}
-
-.tooltip:hover:after {
-  font-size: 14px;
-  display: block;
-  content: attr(data-hover-text);
-  -webkit-filter: opacity(1);
-          filter: opacity(1);
-  background: black;
-  position: absolute;
-  padding: 4px;
-  border-radius: 4px;
-  padding: 9.5px 10px 9.5px 10px;
-}
-
-.tooltip.help:hover:after {
-  -webkit-transform: translateY(-63px) translateX(-86.6%);
-          transform: translateY(-63px) translateX(-86.6%);
-}
-
-.tooltip.minimize:hover:after {
-  -webkit-transform: translateY(-63px) translateX(-90%);
-          transform: translateY(-63px) translateX(-90%);
 }
 /*# sourceMappingURL=App.css.map */

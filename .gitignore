@@ -1,3 +1,4 @@
 truffle.secret.*
 .vite
 .vscode
+.DS_Store
