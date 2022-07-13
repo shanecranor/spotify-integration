@@ -6,3 +6,7 @@ To try it out, feel free to git clone this project and (after creating the truff
 
 To deploy on sporocarp, run truffle-cli deploy and go to the url spit out in the cli with /extension-mapping appended to the end
 You can also test this inside the truffle.tv browser extension by clicking settings and then clicking the bottom right corner of the window, and then adding the url with /extension-mapping as an extension mapping and refreshing the page!
+
+Here is what the Spotify app should look like. It should be draggable in both localhost and when deployed and loaded into the truffle.tv extension
+
+![image](https://user-images.githubusercontent.com/70922464/178805666-c9fa7344-1f6b-443d-a1e7-7b7165052d22.png)
