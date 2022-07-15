@@ -74,4 +74,4 @@ export default scss`
 			transform: translateY(-60px) translateX(-90%);
 		}
 	}
-}`
+}`;
