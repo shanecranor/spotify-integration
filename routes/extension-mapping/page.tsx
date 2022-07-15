@@ -3,7 +3,7 @@ import SpotifyComponent from "../../components/spotify-component/spotify-compone
 import { toDist } from "https://tfl.dev/@truffle/distribute@^2.0.0/format/wc/react/index.ts";
 
 function Home() {
-  return <SpotifyComponent />
+  return <SpotifyComponent />;
 }
 
-export default toDist("react", Home, import.meta.url);
+export default toDist(Home, import.meta.url);
