@@ -55,7 +55,7 @@ function SpotifyComponent() {
     base: base,
     modifiers: defaultModifier,
   };
-  const startPosition: Draggable.vector = { x: 0, y: 0 };
+  const startPosition: Vector = { x: 0, y: 0 };
   const [dragProps, setDragProps] = useState(
     {
       dimensions: startingDimensions,
