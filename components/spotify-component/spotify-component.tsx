@@ -12,7 +12,7 @@ import Stylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/stylesheet/
 import jumper from "https://tfl.dev/@truffle/utils@0.0.1/jumper/jumper.js"
 import { useEffect, useState } from 'https://npm.tfl.dev/react'
 
-import { Modifiers, Vector, Dimensions} from '../draggable/draggable'
+import { Modifiers, Vector, Dimensions } from '../draggable/draggable'
 
 interface Image {
   height: number,
@@ -20,8 +20,8 @@ interface Image {
   url: string
 }
 
-interface Artist {
-  external_urls: {spotify: string}
+export interface Artist {
+  external_urls: { spotify: string }
   href: string,
   id: string,
   name: string,
@@ -29,7 +29,7 @@ interface Artist {
   uri: string
 }
 
-interface SpotifyData {
+export interface SpotifyData {
   title: string,
   link: string,
   fetchTime: number,
@@ -43,12 +43,12 @@ interface SpotifyData {
 function SpotifyComponent() {
   //set base dimensions
   const defaultModifier: Modifiers = { top: -43, right: 0, bottom: 0, left: 10, transition: "none" }
-  const base: Vector  = { x: 415, y: 150 }
-  const startingDimensions: Dimensions =  {
+  const base: Vector = { x: 415, y: 150 }
+  const startingDimensions: Dimensions = {
     base: base,
     modifiers: defaultModifier
   }
-  const startPosition: Draggable.vector = {x: 0, y: 0}
+  const startPosition: Draggable.vector = { x: 0, y: 0 }
   const [dragProps, setDragProps] = useState(
     {
       dimensions: startingDimensions,
@@ -64,7 +64,7 @@ function SpotifyComponent() {
   const orgID = 'shane'
 
   useEffect(() => {
-    const overlayStates: Record<any, Modifiers>= {
+    const overlayStates: Record<any, Modifiers> = {
       fullSize: { ...defaultModifier },
       collapsed: { ...defaultModifier, top: -98, right: -200, transition: `clip-path 0.5s ease` },
       toolTip: { ...defaultModifier, top: 0 }

@@ -6,4 +6,4 @@ function Home() {
   return <SpotifyComponent />
 }
 
-export default toDist("react", Home, import.meta.url);
+export default toDist(Home, import.meta.url);
