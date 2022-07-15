@@ -7,8 +7,8 @@ import React from 'https://npm.tfl.dev/react'
 import Draggable from '../draggable/draggable.tsx'
 import SongInfo from '../song-info/song-info.jsx'
 import ToolTip from '../tooltip/tooltip.jsx'
-import ScopedStylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/scoped-stylesheet/scoped-stylesheet.js"
-import Stylesheet from "https://tfl.dev/@truffle/ui@0.0.1/components/stylesheet/stylesheet.js"
+import { useStyleSheet } from "https://tfl.dev/@truffle/distribute@^2.0.0/format/wc/react/index.ts";
+import styleSheet from "./spotify-component.scss.js";
 import jumper from "https://tfl.dev/@truffle/utils@0.0.1/jumper/jumper.js"
 import { useEffect, useState } from 'https://npm.tfl.dev/react'
 
@@ -41,6 +41,7 @@ export interface SpotifyData {
 }
 
 function SpotifyComponent() {
+  useStyleSheet(styleSheet)
   //set base dimensions
   const defaultModifier: Modifiers = { top: -43, right: 0, bottom: 0, left: 10, transition: "none" }
   const base: Vector = { x: 415, y: 150 }
@@ -118,7 +119,6 @@ function SpotifyComponent() {
       <Draggable
         dimensions={dragProps.dimensions}
         defaultPosition={dragProps.defaultPosition}>
-        <Stylesheet url={new URL("styles/App.css", import.meta.url)} />
         <div className={'spotify-component' + collapsedTag}
           onClick={() => collapsed && setCollapsed(oldState => !oldState)}
         >
