@@ -1,21 +1,21 @@
 import React from 'https://npm.tfl.dev/react'
-import Stylesheet from "https://tfl.dev/@truffle/ui@^0.0.3/components/stylesheet/stylesheet.tag.ts"
+import styleSheet from "./user-info.css.js";
 import jumper from "https://tfl.dev/@truffle/utils@0.0.1/jumper/jumper.js"
 import { useEffect, useState, JSX } from 'https://npm.tfl.dev/react'
 
-export interface Vector{
+export interface Vector {
 	x: number,
 	y: number
 }
 
-export interface DragInfo{
+export interface DragInfo {
 	current: Vector
 	start: Vector,
 	pressed: boolean,
 	dragabble: boolean
 }
 
-export interface Modifiers{
+export interface Modifiers {
 	top: number,
 	right: number,
 	bottom: number,
@@ -23,7 +23,7 @@ export interface Modifiers{
 	transition: string //css value for the transition property
 }
 
-export interface Dimensions{
+export interface Dimensions {
 	base: Vector,
 	modifiers: Modifiers,
 }
@@ -52,18 +52,19 @@ function createIframeStyle(dimensions: Dimensions, dragInfo: DragInfo) {
 	if (dragInfo.pressed) style["clip-path"] = "none"
 	return style
 }
+
 export default function Draggable(
-	{ children, dimensions, defaultPosition } : 
-	{ children: JSX.ReactNode, dimensions: Dimensions, defaultPosition: Vector }) {
+	{ children, dimensions, defaultPosition }:
+		{ children: JSX.ReactNode, dimensions: Dimensions, defaultPosition: Vector }) {
 	const [dragInfo, setDragInfo] = useState<DragInfo>(
 		{
-			...defaultPosition,
-			start: {x: 0, y: 0},
+			current: defaultPosition,
+			start: { x: 0, y: 0 },
 			pressed: false,
 			draggable: true
 		}
 	)
-	//mouse handling
+
 	useEffect(() => {
 		const handleWindowMouseMove = event => {
 			setDragInfo((old: DragInfo) => (
@@ -77,26 +78,22 @@ export default function Draggable(
 			))
 		}
 		if (dragInfo.pressed) {
-			//initiate drag by adding mousemove listener when mouse is pressed and dragging
 			window.addEventListener('mousemove', handleWindowMouseMove)
 		} else {
-			//if mouse is not pressed, we can't be dragging, remove mouse move listener
 			window.removeEventListener('mousemove', handleWindowMouseMove)
 		}
-		return () => {
-			window.removeEventListener('mousemove', handleWindowMouseMove)
-		}
+		return () => (window.removeEventListener('mousemove', handleWindowMouseMove))
 	}, [dragInfo.pressed])
 
 	// use jumper to update the clip path based on the dimensions and drag info
 	useEffect(() => {
 		const style = createIframeStyle(dimensions, dragInfo)
 		jumper.call("layout.applyLayoutConfigSteps", {
-				layoutConfigSteps: [
-					{ action: "useSubject" }, // start with our iframe
-					{ action: "setStyle", value: style },
-				],
-			})
+			layoutConfigSteps: [
+				{ action: "useSubject" }, // start with our iframe
+				{ action: "setStyle", value: style },
+			],
+		})
 	}, [dimensions, dragInfo])
 
 
@@ -117,13 +114,15 @@ export default function Draggable(
 			}}
 			onDragStart={(e) => {
 				e.preventDefault()
-				if (dragInfo.draggable) setDragInfo((old: DragInfo) => ({
-					...old, pressed: true,
-					start: {
-						x: (e.clientX) - old.current.x,
-						y: (e.clientY) - old.current.y
-					}
-				}))
+				if (dragInfo.draggable) {
+					setDragInfo((old: DragInfo) => ({
+						...old, pressed: true,
+						start: {
+							x: (e.clientX) - old.current.x,
+							y: (e.clientY) - old.current.y
+						}
+					}))
+				}
 			}}
 			onMouseUp={() => {
 				setDragInfo((old: DragInfo) => ({ ...old, pressed: false, draggable: true }))
